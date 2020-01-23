@@ -34,11 +34,10 @@ internal fun toBoundingBox(latLonBits: LatLonBits): BoundingBox {
     )
     val significantBits = charPrecision * BITS_PER_CHAR
 
-    var count = 0
     var isEven = true
 
     repeat(significantBits) {
-        val mask = 1L shl (MAX_BIT_PRECISION - ++count)
+        val mask = 1L shl (MAX_BIT_PRECISION - (it + 1))
         val bit = (latLonBits.combinedBits and mask) != 0L
         if (isEven) {
             val mid = lonRange.average()

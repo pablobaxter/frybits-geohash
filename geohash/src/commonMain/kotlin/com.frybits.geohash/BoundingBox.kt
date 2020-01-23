@@ -12,6 +12,8 @@ import com.frybits.geohash.internal.LONGITUDE_MIN
  *
  * 2D representation of an enclosed box projected onto the world map.
  *
+ * @property southWest Southwest point of this [BoundingBox]
+ * @property northEast Northeast ponit of this [BoundingBox]
  */
 class BoundingBox(val southWest: Coordinate, val northEast: Coordinate) {
 
@@ -34,6 +36,9 @@ class BoundingBox(val southWest: Coordinate, val northEast: Coordinate) {
     private val latRange = southWest.latitude..northEast.latitude
     private val lonRange = southWest.longitude..northEast.longitude
 
+    /**
+     * Center point of this box
+     */
     val centerCoordinate = Coordinate(
         (northEast.latitude + southWest.latitude) / 2,
         ((northEast.longitude + southWest.longitude) / 2).let { if (it > 180) it - 360 else it }
@@ -79,6 +84,11 @@ class BoundingBox(val southWest: Coordinate, val northEast: Coordinate) {
         }
     }
 
+    /**
+     * Checks if given coordinate is within the bounds of this box
+     *
+     * @param coordinates
+     */
     fun contains(coordinates: Coordinate): Boolean = contains(coordinates.latitude, coordinates.longitude)
 
     /**

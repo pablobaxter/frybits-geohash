@@ -51,9 +51,8 @@ private fun recombineBits(latBits: Long, lonBits: Long, charPrecision: Int): Lon
     val significantBits = charPrecision * BITS_PER_CHAR
     var bits = 0L
     var isEven = true
-    var count = 0
     repeat(significantBits) {
-        val rightShift = (significantBits - ++count) / 2
+        val rightShift = (significantBits - (it + 1)) / 2
         val maskedBit = if (isEven) {
             (lonBits ushr rightShift) and 1
         } else {
@@ -69,12 +68,11 @@ private fun evenOddBitsRightAligned(bits: Long): LongArray {
     val charPrecision = (bits and 0xF).toInt()
     require(charPrecision in 1..MAX_CHAR_PRECISION) { "Invalid hash bits! Geohash must be between 1 and $MAX_CHAR_PRECISION characters" }
     val significantBits = charPrecision * BITS_PER_CHAR
-    var count = 0
     var isEven = true
     var latBits = 0L
     var lonBits = 0L
     repeat(significantBits) {
-        val rightShift = MAX_BIT_PRECISION - ++count
+        val rightShift = MAX_BIT_PRECISION - (it + 1)
         val maskedBit = (bits ushr rightShift) and 1
         if (isEven) {
             lonBits = (lonBits shl 1) or maskedBit

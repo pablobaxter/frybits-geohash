@@ -192,7 +192,7 @@ class Geohash : Comparable<Geohash> {
     @JvmName("stepsBetween")
     infix fun stepsTo(otherGeohash: Geohash): Long {
         require(charPrecision == otherGeohash.charPrecision) { "Geohashes must be of the same precision to compare steps between" }
-        return this.ord() - otherGeohash.ord()
+        return otherGeohash.ord() - this.ord()
     }
 
     fun contains(geohash: Geohash): Boolean = contains(geohash.geohash)

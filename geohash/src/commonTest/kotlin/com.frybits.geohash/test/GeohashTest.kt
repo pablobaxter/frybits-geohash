@@ -243,6 +243,75 @@ class GeohashTest {
 
     // endregion
 
+    @Test
+    fun `Incrementing geohashes`() {
+        var geohash = Geohash("0")
+        repeat(32) {
+            // Let's iterate through all hashes
+            assertEquals(GEOHASH_CHARS[it].toString(), geohash++.geohash)
+        }
+    }
+
+    @Test
+    fun `Decrementing geohashes`() {
+        var geohash = Geohash("z")
+        repeat(32) {
+            // Let's iterate through all hashes
+            assertEquals(GEOHASH_CHARS[GEOHASH_CHARS.length - it - 1].toString(), geohash--.geohash)
+        }
+    }
+
+    @Test
+    fun `Incrementing geohashes by random number`() {
+        val geohash = Geohash("0")
+        repeat(REPEAT_TEST_COUNT) {
+            val random = Random.nextInt(0, 32)
+            assertEquals(GEOHASH_CHARS[random].toString(), (geohash + random).geohash)
+        }
+    }
+
+    @Test
+    fun `Decrementing geohashes by random number`() {
+        val geohash = Geohash("z")
+        repeat(REPEAT_TEST_COUNT) {
+            val random = Random.nextInt(0, 32)
+            assertEquals(GEOHASH_CHARS[GEOHASH_CHARS.length - random - 1].toString(), (geohash - random).geohash)
+        }
+    }
+
+    @Test
+    fun `Steps between geohashes`() {
+        val geohash = Geohash("0")
+        repeat(REPEAT_TEST_COUNT) {
+            val random = Random.nextLong(0, 32)
+            val testHash = geohash + random
+            assertEquals(random, geohash stepsTo testHash)
+        }
+    }
+
+    @Test
+    fun `Geohash contains checks`() {
+        repeat(REPEAT_TEST_COUNT) {
+            val testHash = Random.geoHash(Random.nextInt(2, 10))
+            var hash = testHash.geohash
+            while (hash.length <= MAX_CHAR_PRECISION) {
+                assertTrue { testHash.contains(hash) }
+                hash += GEOHASH_CHARS.random()
+            }
+        }
+    }
+
+    @Test
+    fun `Geohash not contains checks`() {
+        repeat(REPEAT_TEST_COUNT) {
+            var testHash = Random.geoHash(Random.nextInt(2, 10))
+            var hash = testHash++.geohash
+            while (hash.length <= MAX_CHAR_PRECISION) {
+                assertFalse { testHash.contains(hash) }
+                hash += GEOHASH_CHARS.random()
+            }
+        }
+    }
 
     @Test
     fun `Geohash comparison - same precision`() {
