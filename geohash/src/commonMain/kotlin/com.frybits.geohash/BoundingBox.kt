@@ -12,8 +12,13 @@ import com.frybits.geohash.internal.LONGITUDE_MIN
  *
  * 2D representation of an enclosed box projected onto the world map.
  *
+ * @constructor Creates new BoundingBox from given SW/NE points
+ *
  * @property southWest Southwest point of this [BoundingBox]
  * @property northEast Northeast ponit of this [BoundingBox]
+ *
+ * @throws IllegalArgumentException if [minLat] is greater than [maxLat], if any of the latitudes is
+ * outside of -90 to 90 degrees, or if any longitude is outside of -180 to 180 degrees.
  */
 class BoundingBox(val southWest: Coordinate, val northEast: Coordinate) {
 

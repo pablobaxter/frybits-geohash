@@ -106,18 +106,18 @@ class GeohashTest {
         repeat(REPEAT_TEST_COUNT) {
             val randomPrecision1 = Random.precision(maxCharPrecision = TEST_GEOHASH_1.length)
             val geohash1 = Geohash(TEST_GEOHASH_1.substring(0, randomPrecision1))
-            assertDoubleEquals(TEST_LAT_1, geohash1.coordinates.latitude, approxLatitudeError(randomPrecision1))
-            assertDoubleEquals(TEST_LON_1, geohash1.coordinates.longitude, approxLatitudeError(randomPrecision1))
+            assertDoubleEquals(TEST_LAT_1, geohash1.coordinate.latitude, approxLatitudeError(randomPrecision1))
+            assertDoubleEquals(TEST_LON_1, geohash1.coordinate.longitude, approxLatitudeError(randomPrecision1))
 
             val randomPrecision2 = Random.precision(maxCharPrecision = TEST_GEOHASH_2.length)
             val geohash2 = Geohash(TEST_GEOHASH_2.substring(0, randomPrecision2))
-            assertDoubleEquals(TEST_LAT_2, geohash2.coordinates.latitude, approxLatitudeError(randomPrecision2))
-            assertDoubleEquals(TEST_LON_2, geohash2.coordinates.longitude, approxLatitudeError(randomPrecision2))
+            assertDoubleEquals(TEST_LAT_2, geohash2.coordinate.latitude, approxLatitudeError(randomPrecision2))
+            assertDoubleEquals(TEST_LON_2, geohash2.coordinate.longitude, approxLatitudeError(randomPrecision2))
 
             val randomPrecision3 = Random.precision(maxCharPrecision = TEST_GEOHASH_3.length)
             val geohash3 = Geohash(TEST_GEOHASH_3.substring(0, randomPrecision3))
-            assertDoubleEquals(TEST_LAT_3, geohash3.coordinates.latitude, approxLatitudeError(randomPrecision3))
-            assertDoubleEquals(TEST_LON_3, geohash3.coordinates.longitude, approxLatitudeError(randomPrecision3))
+            assertDoubleEquals(TEST_LAT_3, geohash3.coordinate.latitude, approxLatitudeError(randomPrecision3))
+            assertDoubleEquals(TEST_LON_3, geohash3.coordinate.longitude, approxLatitudeError(randomPrecision3))
         }
     }
 
@@ -128,8 +128,8 @@ class GeohashTest {
         var hash = TEST_GEOHASH_1
         repeat(REPEAT_TEST_COUNT) {
             val geohash = Geohash(hash)
-            lat = geohash.coordinates.latitude
-            lon = geohash.coordinates.longitude
+            lat = geohash.coordinate.latitude
+            lon = geohash.coordinate.longitude
             hash = Geohash(lat, lon, geohash.charPrecision).geohash
         }
 
@@ -140,8 +140,8 @@ class GeohashTest {
         hash = TEST_GEOHASH_2
         repeat(REPEAT_TEST_COUNT) {
             val geohash = Geohash(hash)
-            lat = geohash.coordinates.latitude
-            lon = geohash.coordinates.longitude
+            lat = geohash.coordinate.latitude
+            lon = geohash.coordinate.longitude
             hash = Geohash(lat, lon, geohash.charPrecision).geohash
         }
 
@@ -152,8 +152,8 @@ class GeohashTest {
         hash = TEST_GEOHASH_3
         repeat(REPEAT_TEST_COUNT) {
             val geohash = Geohash(hash)
-            lat = geohash.coordinates.latitude
-            lon = geohash.coordinates.longitude
+            lat = geohash.coordinate.latitude
+            lon = geohash.coordinate.longitude
             hash = Geohash(lat, lon, geohash.charPrecision).geohash
         }
 
