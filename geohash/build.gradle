@@ -1,0 +1,102 @@
+apply plugin: 'org.jetbrains.kotlin.multiplatform'
+apply from: '../publish.gradle'
+
+group geohash_group
+version geohash_version
+
+kotlin {
+    jvm {
+        mavenPublication {
+            groupId geohash_group
+            artifactId project.name + '-jvm' // replace with your library artifact id
+            version geohash_version
+            pom.withXml(configureMavenCentralMetadata)
+        }
+    }
+    js {
+        browser {
+        }
+        nodejs {
+        }
+    }
+    // For ARM, should be changed to iosArm32 or iosArm64
+    // For Linux, should be changed to e.g. linuxX64
+    // For MacOS, should be changed to e.g. macosX64
+    // For Windows, should be changed to e.g. mingwX64
+    macosX64("macos")
+    
+    sourceSets {
+        commonMain {
+            dependencies {
+                implementation "org.jetbrains.kotlin:kotlin-stdlib-common:$kotlin_version"
+            }
+        }
+        commonTest {
+            dependencies {
+                implementation "org.jetbrains.kotlin:kotlin-test-common:$kotlin_version"
+                implementation "org.jetbrains.kotlin:kotlin-test-annotations-common:$kotlin_version"
+            }
+        }
+        jvmMain {
+            dependencies {
+                implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+            }
+        }
+        jvmTest {
+            dependencies {
+                implementation "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
+                implementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
+                implementation "org.hamcrest:hamcrest-library:$hamcrest_version"
+            }
+        }
+        jsMain {
+            dependencies {
+                implementation kotlin('stdlib-js')
+            }
+        }
+        jsTest {
+            dependencies {
+                implementation kotlin('test-js')
+            }
+        }
+        macosMain {
+        }
+        macosTest {
+        }
+    }
+}
+
+bintray {
+    //Gets local.properties info
+    Properties properties = new Properties()
+    def propertiesFile = project.rootProject.file('local.properties')
+    properties.load(propertiesFile.newDataInputStream())
+
+    //Assigns credentials
+    user = properties.getProperty('bintray.user') ?: System.getenv('BINTRAY_USER')
+    key = properties.getProperty('bintray.apiKey') ?: System.getenv('BINTRAY_API_KEY')
+
+    //Only interested in the JVM for now
+    publications = ['jvm']
+
+    // Default: false. Whether to run this as dry-run, without deploying
+    dryRun = false
+    // Default: false. Whether to override version artifacts already published
+    override = false
+    // Default: false. Whether version should be auto published after an upload
+    publish = true
+
+    pkg {
+        repo = 'Frybits-Geohash' // the name of the repository you created on Bintray
+        name = 'com.frybits.geohash.jvm' // the name of the package you created inside it
+        desc = 'Base JVM library for Frybits-Geohash'
+        licenses = ['MIT']
+        vcsUrl = 'https://github.com/pablobaxter/Frybits-Geohash.git'
+        githubRepo = 'pablobaxter/Frybits-Geohash' //Optional Github repository
+        version {
+            name = this.version
+            released = new Date()
+            vcsTag = this.version
+        }
+    }
+}
