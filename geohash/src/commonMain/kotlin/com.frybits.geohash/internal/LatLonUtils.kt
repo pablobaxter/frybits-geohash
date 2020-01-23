@@ -1,4 +1,4 @@
-package com.frybits.geohash
+package com.frybits.geohash.internal
 
 /**
  * Frybits
@@ -15,7 +15,8 @@ internal class LatLonBits {
     constructor(latBits: Long, lonBits: Long, charPrecision: Int) {
         this.latBits = latBits
         this.lonBits = lonBits
-        this.combinedBits = recombineBits(latBits, lonBits, charPrecision)
+        this.combinedBits =
+            recombineBits(latBits, lonBits, charPrecision)
     }
 
     constructor(combinedBits: Long) {

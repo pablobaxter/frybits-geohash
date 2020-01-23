@@ -1,10 +1,10 @@
 package com.frybits.geohash.test
 
 import com.frybits.geohash.BoundingBox
-import com.frybits.geohash.LATITUDE_MAX
-import com.frybits.geohash.LATITUDE_MIN
-import com.frybits.geohash.LONGITUDE_MAX
-import com.frybits.geohash.LONGITUDE_MIN
+import com.frybits.geohash.internal.LATITUDE_MAX
+import com.frybits.geohash.internal.LATITUDE_MIN
+import com.frybits.geohash.internal.LONGITUDE_MAX
+import com.frybits.geohash.internal.LONGITUDE_MIN
 import kotlin.random.Random
 import kotlin.test.Test
 import kotlin.test.assertFailsWith

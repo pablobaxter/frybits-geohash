@@ -1,5 +1,18 @@
 package com.frybits.geohash
 
+import com.frybits.geohash.internal.BITS_PER_CHAR
+import com.frybits.geohash.internal.GEOHASH_CHARS
+import com.frybits.geohash.internal.LATITUDE_MAX
+import com.frybits.geohash.internal.LATITUDE_MIN
+import com.frybits.geohash.internal.LONGITUDE_MAX
+import com.frybits.geohash.internal.LONGITUDE_MIN
+import com.frybits.geohash.internal.LatLonBits
+import com.frybits.geohash.internal.MAX_BIT_PRECISION
+import com.frybits.geohash.internal.MAX_CHAR_PRECISION
+import com.frybits.geohash.internal.toBoundingBox
+import com.frybits.geohash.internal.toBoundingBoxAndBits
+import com.frybits.geohash.internal.toGeohashString
+import com.frybits.geohash.internal.toLatLonBits
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmOverloads
 import kotlin.math.min
@@ -11,22 +24,22 @@ import kotlin.math.min
 
 class Geohash : Comparable<Geohash> {
 
-    val latitude: Double
-    val longitude: Double
+    val coordinates: Coordinate
     val charPrecision: Int
     val geohash: String
     val boundingBox: BoundingBox
 
     internal val latLonBits: LatLonBits
 
-    constructor(latitude: Double, longitude: Double, charPrecision: Int) {
-        require(latitude in LATITUDE_MIN..LATITUDE_MAX) { "Latitude must be between $LATITUDE_MIN and $LATITUDE_MAX" }
-        require(longitude in LONGITUDE_MIN..LONGITUDE_MAX) { "Longitude must be between $LONGITUDE_MIN and $LONGITUDE_MAX" }
+    constructor(latitude: Double, longitude: Double, charPrecision: Int): this(Coordinate(latitude, longitude), charPrecision)
+
+    constructor(coordinates: Coordinate, charPrecision: Int) {
+        require(coordinates.latitude in LATITUDE_MIN..LATITUDE_MAX) { "Latitude must be between $LATITUDE_MIN and $LATITUDE_MAX" }
+        require(coordinates.longitude in LONGITUDE_MIN..LONGITUDE_MAX) { "Longitude must be between $LONGITUDE_MIN and $LONGITUDE_MAX" }
         require(charPrecision in 1..MAX_CHAR_PRECISION) { "Geohash must be between 1 and $MAX_CHAR_PRECISION characters in precision" }
-        this.latitude = latitude
-        this.longitude = longitude
+        this.coordinates = coordinates
         this.charPrecision = charPrecision
-        this.latLonBits = toLatLonBits(latitude, longitude, charPrecision)
+        this.latLonBits = toLatLonBits(coordinates.latitude, coordinates.longitude, charPrecision)
         this.geohash = toGeohashString(latLonBits)
         this.boundingBox = toBoundingBox(latLonBits)
     }
@@ -37,8 +50,7 @@ class Geohash : Comparable<Geohash> {
         this.geohash = geohash
         this.charPrecision = geohash.length
         val (bbox, bits) = toBoundingBoxAndBits(geohash)
-        this.latitude = bbox.centerLat
-        this.longitude = bbox.centerLon
+        this.coordinates = bbox.centerCoordinate
         this.latLonBits = bits
         this.boundingBox = bbox
     }
@@ -50,8 +62,7 @@ class Geohash : Comparable<Geohash> {
         this.geohash = toGeohashString(latLonBits)
         this.boundingBox = toBoundingBox(latLonBits)
         this.latLonBits = latLonBits
-        this.latitude = boundingBox.centerLat
-        this.longitude = boundingBox.centerLon
+        this.coordinates = boundingBox.centerCoordinate
     }
 
     operator fun rangeTo(other: Geohash): GeohashRange = GeohashRange(this, other)
@@ -193,14 +204,15 @@ class Geohash : Comparable<Geohash> {
         return false
     }
 
+    fun contains(coordinates: Coordinate): Boolean = contains(coordinates.latitude, coordinates.longitude)
+
     fun contains(latitude: Double, longitude: Double): Boolean = boundingBox.contains(latitude, longitude)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is Geohash) return false
 
-        return latitude == other.latitude &&
-                longitude == other.longitude &&
+        return coordinates == other.coordinates &&
                 charPrecision == other.charPrecision &&
                 geohash == other.geohash &&
                 latLonBits == other.latLonBits &&
@@ -208,8 +220,7 @@ class Geohash : Comparable<Geohash> {
     }
 
     override fun hashCode(): Int {
-        var result = latitude.hashCode()
-        result = 31 * result + longitude.hashCode()
+        var result = coordinates.hashCode()
         result = 31 * result + charPrecision
         result = 31 * result + geohash.hashCode()
         result = 31 * result + latLonBits.hashCode()
@@ -218,7 +229,7 @@ class Geohash : Comparable<Geohash> {
     }
 
     override fun toString(): String {
-        return "Geohash(latitude=$latitude, longitude=$longitude, charPrecision=$charPrecision, geohash='$geohash', latLonBits=$latLonBits, boundingBox='$boundingBox')"
+        return "Geohash(coordinates=$coordinates, charPrecision=$charPrecision, geohash='$geohash', latLonBits=$latLonBits, boundingBox='$boundingBox')"
     }
 
     override fun compareTo(other: Geohash): Int {

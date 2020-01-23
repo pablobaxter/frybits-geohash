@@ -1,6 +1,6 @@
 package com.frybits.geohash.test
 
-import com.frybits.geohash.LatLonBits
+import com.frybits.geohash.internal.LatLonBits
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -52,17 +52,29 @@ class LatLonBitsTest {
 
     @Test
     fun `Compare LatLonBits`() {
-        val latLonBits1 = LatLonBits(TEST_LAT_BITS_1, TEST_LON_BITS_1, TEST_CHAR_PRECISION_1)
+        val latLonBits1 = LatLonBits(
+            TEST_LAT_BITS_1,
+            TEST_LON_BITS_1,
+            TEST_CHAR_PRECISION_1
+        )
         val combinedBits1 = LatLonBits(TEST_COMBINED_BITS_1)
 
         assertEquals(latLonBits1, combinedBits1)
 
-        val latLonBits2 = LatLonBits(TEST_LAT_BITS_2, TEST_LON_BITS_2, TEST_CHAR_PRECISION_2)
+        val latLonBits2 = LatLonBits(
+            TEST_LAT_BITS_2,
+            TEST_LON_BITS_2,
+            TEST_CHAR_PRECISION_2
+        )
         val combinedBits2 = LatLonBits(TEST_COMBINED_BITS_2)
 
         assertEquals(latLonBits2, combinedBits2)
 
-        val latLonBits3 = LatLonBits(TEST_LAT_BITS_3, TEST_LON_BITS_3, TEST_CHAR_PRECISION_3)
+        val latLonBits3 = LatLonBits(
+            TEST_LAT_BITS_3,
+            TEST_LON_BITS_3,
+            TEST_CHAR_PRECISION_3
+        )
         val combinedBits3 = LatLonBits(TEST_COMBINED_BITS_3)
 
         assertEquals(latLonBits3, combinedBits3)

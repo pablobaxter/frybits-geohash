@@ -1,9 +1,9 @@
 package com.frybits.geohash.test
 
-import com.frybits.geohash.BITS_PER_CHAR
-import com.frybits.geohash.GEOHASH_CHARS
+import com.frybits.geohash.internal.BITS_PER_CHAR
+import com.frybits.geohash.internal.GEOHASH_CHARS
 import com.frybits.geohash.Geohash
-import com.frybits.geohash.MAX_CHAR_PRECISION
+import com.frybits.geohash.internal.MAX_CHAR_PRECISION
 import kotlin.math.abs
 import kotlin.math.pow
 import kotlin.random.Random

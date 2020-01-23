@@ -1,4 +1,6 @@
-package com.frybits.geohash
+package com.frybits.geohash.internal
+
+import com.frybits.geohash.BoundingBox
 
 /**
  * Frybits
@@ -22,8 +24,14 @@ private val GEOHASH_CHARS_DECODER = GEOHASH_CHARS
 internal fun toBoundingBox(latLonBits: LatLonBits): BoundingBox {
     val charPrecision = (latLonBits.combinedBits and 0xF).toInt()
     require(charPrecision in 1..MAX_CHAR_PRECISION) { "Invalid hash bits! Geohash must be between 1 and $MAX_CHAR_PRECISION characters" }
-    val latRange = doubleArrayOf(LATITUDE_MIN, LATITUDE_MAX)
-    val lonRange = doubleArrayOf(LONGITUDE_MIN, LONGITUDE_MAX)
+    val latRange = doubleArrayOf(
+        LATITUDE_MIN,
+        LATITUDE_MAX
+    )
+    val lonRange = doubleArrayOf(
+        LONGITUDE_MIN,
+        LONGITUDE_MAX
+    )
     val significantBits = charPrecision * BITS_PER_CHAR
 
     var count = 0
@@ -70,8 +78,14 @@ internal fun toLatLonBits(latitude: Double, longitude: Double, charPrecision: In
     require(latitude in LATITUDE_MIN..LATITUDE_MAX) { "Latitude must be between $LATITUDE_MIN and $LATITUDE_MAX" }
     require(longitude in LONGITUDE_MIN..LONGITUDE_MAX) { "Longitude must be between $LONGITUDE_MIN and $LONGITUDE_MAX" }
     require(charPrecision in 1..MAX_CHAR_PRECISION) { "Geohash must be between 1 and $MAX_CHAR_PRECISION characters" }
-    val latRange = doubleArrayOf(LATITUDE_MIN, LATITUDE_MAX)
-    val lonRange = doubleArrayOf(LONGITUDE_MIN, LONGITUDE_MAX)
+    val latRange = doubleArrayOf(
+        LATITUDE_MIN,
+        LATITUDE_MAX
+    )
+    val lonRange = doubleArrayOf(
+        LONGITUDE_MIN,
+        LONGITUDE_MAX
+    )
     val significantBits = charPrecision * BITS_PER_CHAR
 
     var isEven = true
@@ -109,8 +123,14 @@ internal fun toBoundingBoxAndBits(geohashString: String): Pair<BoundingBox, LatL
     require(geohashString.length in 1..MAX_CHAR_PRECISION) { "Geohash must be between 1 and $MAX_CHAR_PRECISION characters" }
 
     var isEven = true
-    val latRange = doubleArrayOf(LATITUDE_MIN, LATITUDE_MAX)
-    val lonRange = doubleArrayOf(LONGITUDE_MIN, LONGITUDE_MAX)
+    val latRange = doubleArrayOf(
+        LATITUDE_MIN,
+        LATITUDE_MAX
+    )
+    val lonRange = doubleArrayOf(
+        LONGITUDE_MIN,
+        LONGITUDE_MAX
+    )
     var latBits = 0L
     var lonBits = 0L
     geohashString.forEach { c ->
