@@ -1,13 +1,13 @@
 package com.frybits.geohash.internal
 
 import com.frybits.geohash.BoundingBox
+import com.frybits.geohash.MAX_CHAR_PRECISION
 
 /**
  * Frybits
  * Created by Pablo Baxter (Github: pablobaxter)
  */
 
-internal const val MAX_CHAR_PRECISION = 12
 internal const val LATITUDE_MIN = -90.0
 internal const val LATITUDE_MAX = 90.0
 internal const val LONGITUDE_MIN = -180.0

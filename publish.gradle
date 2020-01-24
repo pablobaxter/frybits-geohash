@@ -3,8 +3,8 @@ apply plugin: 'maven-publish'
 
 project.ext.configureMavenCentralMetadata = { pom ->
     def root = asNode()
-    root.appendNode('name', 'Frybits-Geohash JVM')
-    root.appendNode('description', 'Base JVM library for Frybits-Geohash')
+    root.appendNode('name', 'Frybits-Geohash')
+    root.appendNode('description', 'Geohashing library in pure Kotlin')
     def license = root.appendNode('licenses').appendNode('license')
     license.appendNode('name', 'MIT License')
     license.appendNode('url', 'https://opensource.org/licenses/MIT')

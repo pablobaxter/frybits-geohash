@@ -2,11 +2,11 @@ package com.frybits.geohash.test
 
 import com.frybits.geohash.internal.GEOHASH_CHARS
 import com.frybits.geohash.Geohash
+import com.frybits.geohash.MAX_CHAR_PRECISION
 import com.frybits.geohash.internal.LATITUDE_MAX
 import com.frybits.geohash.internal.LATITUDE_MIN
 import com.frybits.geohash.internal.LONGITUDE_MAX
 import com.frybits.geohash.internal.LONGITUDE_MIN
-import com.frybits.geohash.internal.MAX_CHAR_PRECISION
 import kotlin.random.Random
 import kotlin.test.Test
 import kotlin.test.assertEquals

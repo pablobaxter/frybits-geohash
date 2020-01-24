@@ -1,5 +1,5 @@
 rootProject.name = 'Frybits-Geohash'
 
-include ':geohash'
+include ':geohash', ':android'
 
 enableFeaturePreview('GRADLE_METADATA')

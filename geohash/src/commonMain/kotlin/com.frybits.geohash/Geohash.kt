@@ -8,7 +8,6 @@ import com.frybits.geohash.internal.LONGITUDE_MAX
 import com.frybits.geohash.internal.LONGITUDE_MIN
 import com.frybits.geohash.internal.LatLonBits
 import com.frybits.geohash.internal.MAX_BIT_PRECISION
-import com.frybits.geohash.internal.MAX_CHAR_PRECISION
 import com.frybits.geohash.internal.toBoundingBox
 import com.frybits.geohash.internal.toBoundingBoxAndBits
 import com.frybits.geohash.internal.toGeohashString

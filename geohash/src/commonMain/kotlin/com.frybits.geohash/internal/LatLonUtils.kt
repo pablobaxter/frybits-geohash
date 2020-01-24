@@ -1,5 +1,7 @@
 package com.frybits.geohash.internal
 
+import com.frybits.geohash.MAX_CHAR_PRECISION
+
 /**
  * Frybits
  * Created by Pablo Baxter (Github: pablobaxter)
