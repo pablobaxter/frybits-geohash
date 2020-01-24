@@ -12,7 +12,7 @@ import kotlin.test.assertEquals
 class LatLonBitsTest {
 
     @Test
-    fun `Recombine bits`() {
+    fun recombine_bits() {
         val test1 = LatLonBits(
             TEST_LAT_BITS_1,
             TEST_LON_BITS_1,
@@ -36,7 +36,7 @@ class LatLonBitsTest {
     }
 
     @Test
-    fun `Split combined bits`() {
+    fun split_combined_bits() {
         val test1 = LatLonBits(TEST_COMBINED_BITS_1)
         assertEquals(TEST_LAT_BITS_1, test1.latBits)
         assertEquals(TEST_LON_BITS_1, test1.lonBits)
@@ -51,7 +51,7 @@ class LatLonBitsTest {
     }
 
     @Test
-    fun `Compare LatLonBits`() {
+    fun compare_LatLonBits() {
         val latLonBits1 = LatLonBits(
             TEST_LAT_BITS_1,
             TEST_LON_BITS_1,

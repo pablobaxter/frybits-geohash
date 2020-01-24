@@ -16,7 +16,7 @@ import kotlin.test.assertEquals
 class GeohashUtilsTest {
 
     @Test
-    fun `Lat-Lon to bits to geohash string`() {
+    fun latLon_to_bits_to_geohash_string() {
         val geohash1 = toGeohashString(
             toLatLonBits(
                 TEST_LAT_1,
@@ -46,8 +46,8 @@ class GeohashUtilsTest {
     }
 
     @Test
-    fun `Valid random lat-lon to bits to hash to bits`() {
-        repeat(100000) {
+    fun valid_random_latLon_to_bits_to_hash_to_bits() {
+        repeat(REPEAT_TEST_COUNT) {
             val lat = Random.latitude()
             val lon = Random.longitude()
             val precision = Random.precision()

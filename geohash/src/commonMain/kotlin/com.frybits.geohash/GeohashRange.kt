@@ -14,7 +14,7 @@ class GeohashRange(override val start: Geohash, override val endInclusive: Geoha
     override fun iterator(): Iterator<Geohash> = GeohashIterator(start, endInclusive)
 }
 
-private class GeohashIterator(var curr: Geohash, val endInclusive: Geohash) : Iterator<Geohash> {
+private class GeohashIterator(private var curr: Geohash, private val endInclusive: Geohash) : Iterator<Geohash> {
 
     private var reachedLast = false
 

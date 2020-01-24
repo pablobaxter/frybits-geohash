@@ -118,7 +118,7 @@ internal fun toLatLonBits(latitude: Double, longitude: Double, charPrecision: In
 }
 
 internal fun toBoundingBoxAndBits(geohashString: String): Pair<BoundingBox, LatLonBits> {
-    require(geohashString.all { GEOHASH_CHARS.contains(it) }) { "Geohash string invalid" }
+    require(geohashString.all { GEOHASH_CHARS.contains(it, ignoreCase = true) }) { "Geohash string invalid" }
     require(geohashString.length in 1..MAX_CHAR_PRECISION) { "Geohash must be between 1 and $MAX_CHAR_PRECISION characters" }
 
     var isEven = true
@@ -132,7 +132,7 @@ internal fun toBoundingBoxAndBits(geohashString: String): Pair<BoundingBox, LatL
     )
     var latBits = 0L
     var lonBits = 0L
-    geohashString.forEach { c ->
+    geohashString.toLowerCase().forEach { c ->
         val d = GEOHASH_CHARS_DECODER.getValue(c)
         BIT_MASKS.forEach { mask ->
             val bit = (d and mask) != 0

@@ -20,7 +20,7 @@ class GeohashTest {
     // region Constructor and basic fields tests
 
     @Test
-    fun `Invalid lat`() {
+    fun invalid_lat() {
         assertFailsWith<IllegalArgumentException>("Latitude must be between $LATITUDE_MIN and $LATITUDE_MAX") {
             val lat = LATITUDE_MIN - 1
             val lon = Random.longitude()
@@ -31,7 +31,7 @@ class GeohashTest {
     }
 
     @Test
-    fun `Invalid lon`() {
+    fun invalid_lon() {
         assertFailsWith<IllegalArgumentException>("Longitude must be between $LONGITUDE_MIN and $LONGITUDE_MAX") {
             val lat = Random.latitude()
             val lon = LONGITUDE_MAX + 1
@@ -42,7 +42,7 @@ class GeohashTest {
     }
 
     @Test
-    fun `Invalid precision`() {
+    fun invalid_precision() {
         assertFailsWith<IllegalArgumentException>("Geohash must be between 1 and $MAX_CHAR_PRECISION characters in precision") {
             val lat = Random.latitude()
             val lon = Random.longitude()
@@ -53,28 +53,44 @@ class GeohashTest {
     }
 
     @Test
-    fun `Invalid geohash - bad chars`() {
+    fun invalid_geohash_bad_chars() {
         assertFailsWith<IllegalArgumentException>("Geohash string invalid") {
             Geohash("abcdefghijk")
         }
     }
 
     @Test
-    fun `Invalid geohash - special chars`() {
+    fun invalid_geohash_special_chars() {
         assertFailsWith<IllegalArgumentException>("Geohash string invalid") {
             Geohash("%@&#(")
         }
     }
 
     @Test
-    fun `Invalid geohash - long`() {
+    fun invalid_geohash_long() {
         assertFailsWith<IllegalArgumentException>("Geohash must be between 1 and $MAX_CHAR_PRECISION characters") {
             Geohash("hsjkfnqwsxcvbpkjmnbvcxzqwsdfvcx")
         }
     }
 
     @Test
-    fun `Hash length matches precision`() {
+    fun valid_geohash_uppercase_characters() {
+        repeat(REPEAT_TEST_COUNT) {
+            Random.geoHash(randomUppercase = true).also { g ->
+                assertTrue("Geohash ${g.geohash} failed") {
+                    g.geohash.all {
+                        GEOHASH_CHARS.contains(
+                            it,
+                            ignoreCase = false
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    @Test
+    fun hash_length_matches_precision() {
         repeat(REPEAT_TEST_COUNT) {
             val charPrecision = Random.precision()
             val geohash = Geohash(Random.latitude(), Random.longitude(), charPrecision)
@@ -85,7 +101,7 @@ class GeohashTest {
     }
 
     @Test
-    fun `Lat-Lons produce expected geohashes`() {
+    fun latLons_produce_expected_geohashes() {
         repeat(REPEAT_TEST_COUNT) {
             val randomPrecision1 = Random.precision(maxCharPrecision = TEST_GEOHASH_1.length)
             val geohash1 = Geohash(TEST_LAT_1, TEST_LON_1, randomPrecision1)
@@ -102,7 +118,7 @@ class GeohashTest {
     }
 
     @Test
-    fun `Geohashes produce expected lat-lons`() {
+    fun geohashes_produce_expected_latLons() {
         repeat(REPEAT_TEST_COUNT) {
             val randomPrecision1 = Random.precision(maxCharPrecision = TEST_GEOHASH_1.length)
             val geohash1 = Geohash(TEST_GEOHASH_1.substring(0, randomPrecision1))
@@ -122,7 +138,7 @@ class GeohashTest {
     }
 
     @Test
-    fun `Geohashes cycled between hash and coords remain the same`() {
+    fun geohashes_cycled_between_hash_and_coords_remain_the_same() {
         var lat = 0.0
         var lon = 0.0
         var hash = TEST_GEOHASH_1
@@ -167,7 +183,7 @@ class GeohashTest {
     // region Neighbors tests
 
     @Test
-    fun `Neighbors - expected surrounding neighbors are produced`() {
+    fun expected_surrounding_neighbors_are_produced() {
         val centerHash = "9u5tc2rep"
         val surroundingHashes = listOf(
             "9u5tc2rer",
@@ -186,8 +202,8 @@ class GeohashTest {
     }
 
     @Test
-    fun `Neighbors - neighbors start at North and iterate clockwise`() {
-        val centerHash = Geohash("9u5tc2rep")
+    fun neighbors_start_at_North_and_iterate_clockwise() {
+        val centerHash = Geohash("9u5tC2rep")
         centerHash.surroundingGeohashes(includeSelf = false).forEachIndexed { i, h ->
             when (i) {
                 0 -> assertEquals(centerHash.neighborAt(Geohash.Direction.NORTH), h)
@@ -204,7 +220,7 @@ class GeohashTest {
     }
 
     @Test
-    fun `Neighbors - test surrounding geohashes at 180 meridian`() {
+    fun test_surrounding_geohashes_at_180_meridian() {
         val centerHash = "8h0jb0"
         val surroundingHashes = listOf(
             "8h0jb1",
@@ -223,7 +239,7 @@ class GeohashTest {
     }
 
     @Test
-    fun `Neighbors - edge case`() {
+    fun neighbors_edge_case() {
         val centerHash = "zzzzzzzzzzz"
         val surroundingHashes = listOf(
             "pbpbpbpbpbp",
@@ -244,7 +260,7 @@ class GeohashTest {
     // endregion
 
     @Test
-    fun `Incrementing geohashes`() {
+    fun incrementing_geohashes() {
         var geohash = Geohash("0")
         repeat(32) {
             // Let's iterate through all hashes
@@ -253,8 +269,8 @@ class GeohashTest {
     }
 
     @Test
-    fun `Decrementing geohashes`() {
-        var geohash = Geohash("z")
+    fun decrementing_geohashes() {
+        var geohash = Geohash("Z")
         repeat(32) {
             // Let's iterate through all hashes
             assertEquals(GEOHASH_CHARS[GEOHASH_CHARS.length - it - 1].toString(), geohash--.geohash)
@@ -262,7 +278,7 @@ class GeohashTest {
     }
 
     @Test
-    fun `Incrementing geohashes by random number`() {
+    fun incrementing_geohashes_by_random_number() {
         val geohash = Geohash("0")
         repeat(REPEAT_TEST_COUNT) {
             val random = Random.nextInt(0, 32)
@@ -271,8 +287,8 @@ class GeohashTest {
     }
 
     @Test
-    fun `Decrementing geohashes by random number`() {
-        val geohash = Geohash("z")
+    fun decrementing_geohashes_by_random_number() {
+        val geohash = Geohash("Z")
         repeat(REPEAT_TEST_COUNT) {
             val random = Random.nextInt(0, 32)
             assertEquals(GEOHASH_CHARS[GEOHASH_CHARS.length - random - 1].toString(), (geohash - random).geohash)
@@ -280,7 +296,7 @@ class GeohashTest {
     }
 
     @Test
-    fun `Steps between geohashes`() {
+    fun steps_between_geohashes() {
         val geohash = Geohash("0")
         repeat(REPEAT_TEST_COUNT) {
             val random = Random.nextLong(0, 32)
@@ -290,7 +306,7 @@ class GeohashTest {
     }
 
     @Test
-    fun `Geohash contains checks`() {
+    fun geohash_contains_checks() {
         repeat(REPEAT_TEST_COUNT) {
             val testHash = Random.geoHash(Random.nextInt(2, 10))
             var hash = testHash.geohash
@@ -302,7 +318,7 @@ class GeohashTest {
     }
 
     @Test
-    fun `Geohash not contains checks`() {
+    fun geohash_not_contains_checks() {
         repeat(REPEAT_TEST_COUNT) {
             var testHash = Random.geoHash(Random.nextInt(2, 10))
             var hash = testHash++.geohash
@@ -314,7 +330,7 @@ class GeohashTest {
     }
 
     @Test
-    fun `Geohash comparison - same precision`() {
+    fun geohash_comparison_same_precision() {
         repeat(REPEAT_TEST_COUNT) {
             val randomGeohash = Random.geoHash()
 
@@ -329,7 +345,7 @@ class GeohashTest {
     }
 
     @Test
-    fun `Geohash comparison - different precision`() {
+    fun geohash_comparison_different_precision() {
         repeat(REPEAT_TEST_COUNT) {
             val randomGeohash1 = Random.geoHash(9)
             val randomGeohash2 = Geohash(randomGeohash1.geohash + GEOHASH_CHARS.random())
@@ -340,8 +356,8 @@ class GeohashTest {
     }
 
     @Test
-    fun `Geohash comparison - precise hash greater than imprecise hash`() {
-        val geohashZ = Geohash("zzzzzz")
+    fun geohash_comparison_precise_hash_greater_than_imprecise_hash() {
+        val geohashZ = Geohash("zzzZzz")
         val geohash00 = Geohash("00")
 
         assertTrue { geohashZ > geohash00 }
@@ -349,7 +365,7 @@ class GeohashTest {
     }
 
     @Test
-    fun `Geohash comparison - edge case with '0' geohash`() {
+    fun geohash_comparison_edge_case_with_0_geohash() {
         val geohash1 = Geohash("0")
         val geohash2 = Geohash("0000000")
 

@@ -85,9 +85,9 @@ class Geohash : Comparable<Geohash> {
      * @throws IllegalArgumentException If [geohash] string is invalid or if the string length is not between 1 and [MAX_CHAR_PRECISION]
      */
     constructor(geohash: String) {
-        require(geohash.all { GEOHASH_CHARS.contains(it) }) { "Geohash string invalid" }
+        require(geohash.all { GEOHASH_CHARS.contains(it, ignoreCase = true) }) { "Geohash string invalid" }
         require(geohash.length in 1..MAX_CHAR_PRECISION) { "Geohash must be between 1 and $MAX_CHAR_PRECISION characters" }
-        this.geohash = geohash
+        this.geohash = geohash.toLowerCase()
         this.charPrecision = geohash.length
         val (bbox, bits) = toBoundingBoxAndBits(geohash)
         this.coordinate = bbox.centerCoordinate
@@ -294,7 +294,7 @@ class Geohash : Comparable<Geohash> {
      */
     fun contains(geohash: String): Boolean {
         if (geohash.length >= charPrecision) {
-            return geohash.startsWith(this.geohash)
+            return geohash.startsWith(this.geohash, ignoreCase = true)
         }
         return false
     }

@@ -17,7 +17,7 @@ import kotlin.test.assertFailsWith
 class CoordinateTest {
 
     @Test
-    fun `Invalid lat`() {
+    fun invalid_lat() {
         assertFailsWith<IllegalArgumentException>("Latitude must be between $LATITUDE_MIN and $LATITUDE_MAX") {
             val lat = LATITUDE_MIN - 1
             val lon = Random.longitude()
@@ -27,7 +27,7 @@ class CoordinateTest {
     }
 
     @Test
-    fun `Invalid lon`() {
+    fun invalid_lon() {
         assertFailsWith<IllegalArgumentException>("Longitude must be between $LONGITUDE_MIN and $LONGITUDE_MAX") {
             val lat = Random.latitude()
             val lon = LONGITUDE_MAX + 1
