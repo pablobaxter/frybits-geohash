@@ -14,7 +14,7 @@ import kotlin.test.assertTrue
  * Created by Pablo Baxter (Github: pablobaxter)
  */
 
-const val REPEAT_TEST_COUNT = 100000
+const val REPEAT_TEST_COUNT = 2000
 
 // For geohashes
 const val TEST_GEOHASH_1 = "9wkrtyvvw3wd"

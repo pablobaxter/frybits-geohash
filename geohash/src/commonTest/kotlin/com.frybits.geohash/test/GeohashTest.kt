@@ -8,7 +8,13 @@ import com.frybits.geohash.internal.LONGITUDE_MAX
 import com.frybits.geohash.internal.LONGITUDE_MIN
 import com.frybits.geohash.internal.MAX_CHAR_PRECISION
 import kotlin.random.Random
-import kotlin.test.*
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
+import kotlin.test.assertFalse
+import kotlin.test.assertNotEquals
+import kotlin.test.assertTrue
+import kotlin.test.fail
 
 /**
  * Frybits
