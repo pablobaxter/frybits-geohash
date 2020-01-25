@@ -8,9 +8,9 @@ package com.frybits.geohash.internal
 // Internal class to hold lat/lon bits without boxing them
 internal class LatLonBits {
 
-    val latBits: Long
-    val lonBits: Long
-    val combinedBits: Long
+    val latBits: Long // This is the odd bits of the geohash
+    val lonBits: Long // This is the even bits of the geohash
+    val combinedBits: Long // Combined lat/lon bits, interleaved from left to right with lon bit first
 
     constructor(latBits: Long, lonBits: Long, charPrecision: Int) {
         this.latBits = latBits

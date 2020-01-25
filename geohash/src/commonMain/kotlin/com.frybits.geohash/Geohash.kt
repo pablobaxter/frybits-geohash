@@ -1,5 +1,6 @@
 package com.frybits.geohash
 
+import com.frybits.geohash.internal.GeohashRangeImpl
 import com.frybits.geohash.internal.LatLonBits
 import com.frybits.geohash.internal.toBoundingBox
 import com.frybits.geohash.internal.toBoundingBoxAndBits
@@ -102,7 +103,7 @@ class Geohash : Comparable<Geohash> {
     /**
      * Creates an iterable [GeohashRange] object from this geohash to the [other]
      */
-    operator fun rangeTo(other: Geohash): GeohashRange = GeohashRange(this, other)
+    operator fun rangeTo(other: Geohash): GeohashRange = GeohashRangeImpl(this, other)
 
     /**
      * Checks if the given [geohash] is in this geohash. All geohashes contain themselves

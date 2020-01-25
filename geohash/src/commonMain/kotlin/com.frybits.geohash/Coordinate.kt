@@ -24,9 +24,7 @@ class Coordinate(val latitude: Double, val longitude: Double) {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (other == null || this::class != other::class) return false
-
-        other as Coordinate
+        if (other !is Coordinate) return false
 
         if (latitude != other.latitude) return false
         if (longitude != other.longitude) return false

@@ -34,7 +34,7 @@ class GeohashTest {
     // region Constructor and basic fields tests
 
     @Test
-    fun invalid_lat() {
+    fun lat_lon_precision_validation() {
         assertFailsWith<IllegalArgumentException>("Latitude must be between $LATITUDE_MIN and $LATITUDE_MAX") {
             val lat = LATITUDE_MIN - 1
             val lon = Random.longitude()
@@ -42,10 +42,7 @@ class GeohashTest {
 
             Geohash(lat, lon, precision)
         }
-    }
 
-    @Test
-    fun invalid_lon() {
         assertFailsWith<IllegalArgumentException>("Longitude must be between $LONGITUDE_MIN and $LONGITUDE_MAX") {
             val lat = Random.latitude()
             val lon = LONGITUDE_MAX + 1
@@ -53,10 +50,7 @@ class GeohashTest {
 
             Geohash(lat, lon, precision)
         }
-    }
 
-    @Test
-    fun invalid_precision() {
         assertFailsWith<IllegalArgumentException>("Geohash must be between 1 and $MAX_CHAR_PRECISION characters in precision") {
             val lat = Random.latitude()
             val lon = Random.longitude()
@@ -67,21 +61,15 @@ class GeohashTest {
     }
 
     @Test
-    fun invalid_geohash_bad_chars() {
+    fun geohash_validation() {
         assertFailsWith<IllegalArgumentException>("Geohash string invalid") {
             Geohash("abcdefghijk")
         }
-    }
 
-    @Test
-    fun invalid_geohash_special_chars() {
         assertFailsWith<IllegalArgumentException>("Geohash string invalid") {
             Geohash("%@&#(")
         }
-    }
 
-    @Test
-    fun invalid_geohash_long() {
         assertFailsWith<IllegalArgumentException>("Geohash must be between 1 and $MAX_CHAR_PRECISION characters") {
             Geohash("hsjkfnqwsxcvbpkjmnbvcxzqwsdfvcx")
         }

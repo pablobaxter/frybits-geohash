@@ -9,12 +9,16 @@ import com.frybits.geohash.MAX_CHAR_PRECISION
  * Created by Pablo Baxter (Github: pablobaxter)
  */
 
-// Helper function to recombine the bits
+// Interleaves the latbits and lonbits, starting with lonbit
 internal fun recombineBits(latBits: Long, lonBits: Long, charPrecision: Int): Long {
     require(charPrecision in 1..MAX_CHAR_PRECISION) { "Invalid hash bits! Geohash must be between 1 and $MAX_CHAR_PRECISION characters" }
+
+    // How many bits we should encode
     val significantBits = charPrecision * BITS_PER_CHAR
-    var bits = 0L
+    var bits = 0L // Bits container
     var isEven = true
+
+    // Geohashing encoding algorithm
     repeat(significantBits) {
         val rightShift = (significantBits - (it + 1)) / 2
         val maskedBit = if (isEven) {
@@ -25,11 +29,15 @@ internal fun recombineBits(latBits: Long, lonBits: Long, charPrecision: Int): Lo
         bits = (bits shl 1) or maskedBit
         isEven = !isEven
     }
+
+    // Left align the bits, and encode the precision at the last 4 bits. Last 4 bits are never used for lat/lon encoding
     return (bits shl (MAX_BIT_PRECISION - significantBits)) or charPrecision.toLong()
 }
 
+// Split the combined bits into latbits and lonbits
+// Storing the lat/lon bits separately takes one step away each time we search for a neighbor
 internal fun evenOddBitsRightAligned(bits: Long): LongArray {
-    val charPrecision = (bits and 0xF).toInt()
+    val charPrecision = (bits and 0xF).toInt() // charPrecision encoded to the bits
     require(charPrecision in 1..MAX_CHAR_PRECISION) { "Invalid hash bits! Geohash must be between 1 and $MAX_CHAR_PRECISION characters" }
     val significantBits = charPrecision * BITS_PER_CHAR
     var isEven = true

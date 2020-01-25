@@ -1,6 +1,7 @@
 package com.frybits.geohash.test
 
 import com.frybits.geohash.BITS_PER_CHAR
+import com.frybits.geohash.Coordinate
 import com.frybits.geohash.GEOHASH_CHARS
 import com.frybits.geohash.Geohash
 import com.frybits.geohash.MAX_CHAR_PRECISION
@@ -30,16 +31,22 @@ const val TEST_LAT_3 = -89.9952
 const val TEST_LON_3 = -179.9897
 
 // For lat/lon bits
+const val TEST_BITS_GEOHASH_1 = "qm"
+val TEST_COORD_1 = Coordinate(-14.1, 107.0)
 const val TEST_CHAR_PRECISION_1 = 2
 const val TEST_LAT_BITS_1 = 13L
 const val TEST_LON_BITS_1 = 25L
 const val TEST_COMBINED_BITS_1 = -5422333951354077184L + TEST_CHAR_PRECISION_1
 
+const val TEST_BITS_GEOHASH_2 = "mgu3"
+val TEST_COORD_2 = Coordinate(-23.64, 84.9)
 const val TEST_CHAR_PRECISION_2 = 4
 const val TEST_LAT_BITS_2 = 377L
 const val TEST_LON_BITS_2 = 753L
 const val TEST_COMBINED_BITS_2 = -7209084326955188224L + TEST_CHAR_PRECISION_2
 
+const val TEST_BITS_GEOHASH_3 = TEST_GEOHASH_1
+val TEST_COORD_3 = Coordinate(TEST_LAT_1, TEST_LON_1)
 const val TEST_CHAR_PRECISION_3 = MAX_CHAR_PRECISION
 const val TEST_LAT_BITS_3 = 754677298L
 const val TEST_LON_BITS_3 = 219930426L
@@ -51,9 +58,9 @@ fun Random.longitude(): Double = nextDouble(-180.0, 180.0)
 
 fun Random.precision(maxCharPrecision: Int = MAX_CHAR_PRECISION): Int = nextInt(1, maxCharPrecision)
 
-fun Random.geoHash(maxCharPrecision: Int = MAX_CHAR_PRECISION, randomUppercase: Boolean = true): Geohash = Geohash(
+fun Random.geoHash(minCharPrecision: Int = 1, maxCharPrecision: Int = MAX_CHAR_PRECISION, randomUppercase: Boolean = true): Geohash = Geohash(
     buildString {
-        repeat(nextInt(1, maxCharPrecision)) {
+        repeat(nextInt(minCharPrecision, maxCharPrecision)) {
             append(GEOHASH_CHARS.random(this@geoHash).let { if (randomUppercase && Random.nextBoolean()) it.toUpperCase() else it })
         }
     })
