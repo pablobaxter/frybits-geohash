@@ -1,7 +1,8 @@
 package com.frybits.geohash
 
+import kotlin.js.JsName
+
 /**
- *
  * Frybits
  * Created by Pablo Baxter (Github: pablobaxter)
  *
@@ -29,6 +30,7 @@ class BoundingBox(val southWestPoint: Coordinate, val northEastPoint: Coordinate
      * @throws IllegalArgumentException if [minLat] is greater than [maxLat], if any of the latitudes is
      * outside of -90 to 90 degrees, or if any longitude is outside of -180 to 180 degrees.
      */
+    @JsName("boundingBoxLatLons")
     constructor(minLat: Double, minLon: Double, maxLat: Double, maxLon: Double) : this(
         Coordinate(minLat, minLon),
         Coordinate(maxLat, maxLon)
@@ -81,6 +83,7 @@ class BoundingBox(val southWestPoint: Coordinate, val northEastPoint: Coordinate
      *
      * @return If this box intersects the other box (this includes tangent boxes), return true else false
      */
+    @JsName("intersects")
     fun intersects(other: BoundingBox): Boolean {
         if (other.southWestPoint.latitude > northEastPoint.latitude || other.northEastPoint.latitude < southWestPoint.latitude) return false
 
@@ -98,9 +101,10 @@ class BoundingBox(val southWestPoint: Coordinate, val northEastPoint: Coordinate
     /**
      * Checks if given coordinate is within the bounds of this box
      *
-     * @param coordinates
+     * @param coordinate
      */
-    fun contains(coordinates: Coordinate): Boolean = contains(coordinates.latitude, coordinates.longitude)
+    @JsName("containsCoordinate")
+    fun contains(coordinate: Coordinate): Boolean = contains(coordinate.latitude, coordinate.longitude)
 
     /**
      * Checks if given lat/lon is within the bounds of this box
@@ -108,6 +112,7 @@ class BoundingBox(val southWestPoint: Coordinate, val northEastPoint: Coordinate
      * @param lat Latitude to test against
      * @param lon Longitude to test against
      */
+    @JsName("containsLatLon")
     fun contains(lat: Double, lon: Double): Boolean {
         return lat in latRange && if (intersects180Meridian) {
             lon <= northEastPoint.longitude || lon >= southWestPoint.longitude

@@ -7,6 +7,7 @@ version geohash_version
 
 android {
     compileSdkVersion compileSdk_version
+    testOptions.unitTests.includeAndroidResources = true
 
     defaultConfig {
         minSdkVersion minSdk_version
@@ -37,6 +38,9 @@ dependencies {
 
     //Test
     testImplementation "junit:junit:$junit_version"
+    testImplementation "androidx.test:core:$androidx_test_runner_core"
+    testImplementation "androidx.test.ext:junit:$androidx_test_runner_ext_version"
+    testImplementation "org.robolectric:robolectric:$robolectric_version"
     androidTestImplementation "androidx.test:runner:$androidx_test_runner_version"
     androidTestImplementation "androidx.test:rules:$androidx_test_runner_version"
     androidTestImplementation "androidx.test.espresso:espresso-core:$androidx_espresso_core_version"

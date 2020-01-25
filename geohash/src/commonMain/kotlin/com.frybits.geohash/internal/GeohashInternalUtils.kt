@@ -1,3 +1,5 @@
+@file:JvmName("InternalGeohashUtils")
+
 package com.frybits.geohash.internal
 
 import com.frybits.geohash.BITS_PER_CHAR
@@ -9,6 +11,8 @@ import com.frybits.geohash.LONGITUDE_MAX
 import com.frybits.geohash.LONGITUDE_MIN
 import com.frybits.geohash.MAX_BIT_PRECISION
 import com.frybits.geohash.MAX_CHAR_PRECISION
+import kotlin.jvm.JvmName
+import kotlin.jvm.JvmSynthetic
 
 /**
  * Frybits
@@ -23,6 +27,7 @@ private val GEOHASH_CHARS_DECODER = GEOHASH_CHARS
     .mapIndexed { index, c -> c to index }
     .associate { return@associate it }
 
+@JvmSynthetic
 // LatLonBits -> BoundingBox
 internal fun toBoundingBox(latLonBits: LatLonBits): BoundingBox {
     val charPrecision = (latLonBits.combinedBits and 0xF).toInt() // Last 4 bits are used for holding character precision
@@ -69,6 +74,7 @@ internal fun toBoundingBox(latLonBits: LatLonBits): BoundingBox {
     return BoundingBox(latRange[0], lonRange[0], latRange[1], lonRange[1])
 }
 
+@JvmSynthetic
 // LatLonBits -> Geohash string
 internal fun toGeohashString(latLonBits: LatLonBits): String {
     val charPrecision = (latLonBits.combinedBits and 0xF).toInt() // Last 4 bits are used for holding character precision
@@ -85,6 +91,7 @@ internal fun toGeohashString(latLonBits: LatLonBits): String {
     }
 }
 
+@JvmSynthetic
 // Lat/Lon and precision -> LatLonBits
 internal fun toLatLonBits(latitude: Double, longitude: Double, charPrecision: Int): LatLonBits {
     require(latitude in LATITUDE_MIN..LATITUDE_MAX) { "Latitude must be between $LATITUDE_MIN and $LATITUDE_MAX" }
@@ -131,9 +138,10 @@ internal fun toLatLonBits(latitude: Double, longitude: Double, charPrecision: In
         isEven = !isEven
     }
 
-    return LatLonBits(latBits, lonBits, charPrecision)
+    return latLonBits(latBits, lonBits, charPrecision)
 }
 
+@JvmSynthetic
 // Geohash string -> BoundingBox & LatLonBits
 // Instead of creating 2 separate functions to iterate through the geohash, this just kills 2 birds with one stone
 internal fun toBoundingBoxAndBits(geohashString: String): Pair<BoundingBox, LatLonBits> {
@@ -183,5 +191,5 @@ internal fun toBoundingBoxAndBits(geohashString: String): Pair<BoundingBox, LatL
         }
     }
     return BoundingBox(latRange[0], lonRange[0], latRange[1], lonRange[1]) to
-            LatLonBits(latBits, lonBits, geohashString.length)
+            latLonBits(latBits, lonBits, geohashString.length)
 }

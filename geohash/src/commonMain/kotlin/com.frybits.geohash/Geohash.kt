@@ -1,11 +1,12 @@
 package com.frybits.geohash
 
-import com.frybits.geohash.internal.GeohashRangeImpl
 import com.frybits.geohash.internal.LatLonBits
+import com.frybits.geohash.internal.geohashRange
 import com.frybits.geohash.internal.toBoundingBox
 import com.frybits.geohash.internal.toBoundingBoxAndBits
 import com.frybits.geohash.internal.toGeohashString
 import com.frybits.geohash.internal.toLatLonBits
+import kotlin.js.JsName
 import kotlin.math.min
 
 /**
@@ -50,25 +51,27 @@ class Geohash : Comparable<Geohash> {
      * @throws IllegalArgumentException If [latitude] is not between [LATITUDE_MIN] and [LATITUDE_MAX], if [longitude] is not between
      * [LONGITUDE_MIN] and [LONGITUDE_MAX], or if [charPrecision] is not between 1 and [MAX_CHAR_PRECISION]
      */
+    @JsName("geohashWithLatLonAndPrecision")
     constructor(latitude: Double, longitude: Double, charPrecision: Int) : this(
         Coordinate(latitude, longitude),
         charPrecision
     )
 
     /**
-     * @param coordinates
+     * @param coordinate
      * @param charPrecision
      *
      * @throws IllegalArgumentException If latitude is not between [LATITUDE_MIN] and [LATITUDE_MAX], if longitude is not between
      * [LONGITUDE_MIN] and [LONGITUDE_MAX], or if [charPrecision] is not between 1 and [MAX_CHAR_PRECISION]
      */
-    constructor(coordinates: Coordinate, charPrecision: Int) {
-        require(coordinates.latitude in LATITUDE_MIN..LATITUDE_MAX) { "Latitude must be between $LATITUDE_MIN and $LATITUDE_MAX" }
-        require(coordinates.longitude in LONGITUDE_MIN..LONGITUDE_MAX) { "Longitude must be between $LONGITUDE_MIN and $LONGITUDE_MAX" }
+    @JsName("geohashWithCoordinateAndPrecision")
+    constructor(coordinate: Coordinate, charPrecision: Int) {
+        require(coordinate.latitude in LATITUDE_MIN..LATITUDE_MAX) { "Latitude must be between $LATITUDE_MIN and $LATITUDE_MAX" }
+        require(coordinate.longitude in LONGITUDE_MIN..LONGITUDE_MAX) { "Longitude must be between $LONGITUDE_MIN and $LONGITUDE_MAX" }
         require(charPrecision in 1..MAX_CHAR_PRECISION) { "Geohash must be between 1 and $MAX_CHAR_PRECISION characters in precision" }
-        this.coordinate = coordinates
+        this.coordinate = coordinate
         this.charPrecision = charPrecision
-        this.latLonBits = toLatLonBits(coordinates.latitude, coordinates.longitude, charPrecision)
+        this.latLonBits = toLatLonBits(coordinate.latitude, coordinate.longitude, charPrecision)
         this.geohash = toGeohashString(latLonBits)
         this.boundingBox = toBoundingBox(latLonBits)
     }
@@ -78,6 +81,7 @@ class Geohash : Comparable<Geohash> {
      *
      * @throws IllegalArgumentException If [geohash] string is invalid or if the string length is not between 1 and [MAX_CHAR_PRECISION]
      */
+    @JsName("geohashWithString")
     constructor(geohash: String) {
         require(geohash.all { GEOHASH_CHARS.contains(it, ignoreCase = true) }) { "Geohash string invalid" }
         require(geohash.length in 1..MAX_CHAR_PRECISION) { "Geohash must be between 1 and $MAX_CHAR_PRECISION characters" }
@@ -103,16 +107,19 @@ class Geohash : Comparable<Geohash> {
     /**
      * Creates an iterable [GeohashRange] object from this geohash to the [other]
      */
-    operator fun rangeTo(other: Geohash): GeohashRange = GeohashRangeImpl(this, other)
+    @JsName("rangeTo")
+    operator fun rangeTo(other: Geohash): GeohashRange = geohashRange(this, other)
 
     /**
      * Checks if the given [geohash] is in this geohash. All geohashes contain themselves
      */
+    @JsName("containsGeohash")
     fun contains(geohash: Geohash): Boolean = contains(geohash.geohash)
 
     /**
      * Checks if the given [geohash] string is in this geohash. All geohashes contain themselves
      */
+    @JsName("containsGeohashString")
     fun contains(geohash: String): Boolean {
         if (geohash.length >= charPrecision) {
             return geohash.startsWith(this.geohash, ignoreCase = true)
@@ -123,11 +130,13 @@ class Geohash : Comparable<Geohash> {
     /**
      * Checks if the given [coordinate] is in this geohash
      */
+    @JsName("containsCoordinate")
     fun contains(coordinate: Coordinate): Boolean = contains(coordinate.latitude, coordinate.longitude)
 
     /**
      * Checks if the given [latitude]/[longitude] is in this geohash
      */
+    @JsName("containsLatLon")
     fun contains(latitude: Double, longitude: Double): Boolean = boundingBox.contains(latitude, longitude)
 
     override fun equals(other: Any?): Boolean {
@@ -151,7 +160,7 @@ class Geohash : Comparable<Geohash> {
     }
 
     override fun toString(): String {
-        return "Geohash(coordinates=$coordinate, charPrecision=$charPrecision, geohash='$geohash', latLonBits=$latLonBits, boundingBox='$boundingBox')"
+        return "Geohash(coordinate=$coordinate, charPrecision=$charPrecision, geohash='$geohash', latLonBits=$latLonBits, boundingBox='$boundingBox')"
     }
 
     override fun compareTo(other: Geohash): Int {

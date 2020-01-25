@@ -1,15 +1,22 @@
+@file:JvmName("InternalIteratorUtils")
+
 package com.frybits.geohash.internal
 
 import com.frybits.geohash.Geohash
 import com.frybits.geohash.dec
 import com.frybits.geohash.inc
+import kotlin.jvm.JvmName
+import kotlin.jvm.JvmSynthetic
 
 /**
  * Frybits
  * Created by Pablo Baxter (Github: pablobaxter)
  */
 
-internal class GeohashIterator(
+@JvmSynthetic
+internal fun geoHashIterator(curr: Geohash, endInclusive: Geohash): Iterator<Geohash> = GeohashIterator(curr, endInclusive)
+
+private class GeohashIterator(
     private var curr: Geohash,
     private val endInclusive: Geohash
 ) : Iterator<Geohash> {

@@ -1,4 +1,5 @@
 @file:JvmName("GeohashConstants")
+
 package com.frybits.geohash
 
 import kotlin.jvm.JvmName

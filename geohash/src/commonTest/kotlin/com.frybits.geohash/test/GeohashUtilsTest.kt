@@ -5,7 +5,7 @@ import com.frybits.geohash.LATITUDE_MIN
 import com.frybits.geohash.LONGITUDE_MAX
 import com.frybits.geohash.LONGITUDE_MIN
 import com.frybits.geohash.MAX_CHAR_PRECISION
-import com.frybits.geohash.internal.LatLonBits
+import com.frybits.geohash.internal.latLonBits
 import com.frybits.geohash.internal.toBoundingBox
 import com.frybits.geohash.internal.toBoundingBoxAndBits
 import com.frybits.geohash.internal.toGeohashString
@@ -24,7 +24,7 @@ class GeohashUtilsTest {
 
     @Test
     fun bits_to_boundingbox() {
-        val boundingBox1 = toBoundingBox(LatLonBits(TEST_COMBINED_BITS_1))
+        val boundingBox1 = toBoundingBox(latLonBits(TEST_COMBINED_BITS_1))
 
         assertDoubleEquals(
             boundingBox1.centerCoordinate.latitude,
@@ -37,7 +37,7 @@ class GeohashUtilsTest {
             approxLongitudeError(TEST_CHAR_PRECISION_1)
         )
 
-        val boundingBox2 = toBoundingBox(LatLonBits(TEST_COMBINED_BITS_2))
+        val boundingBox2 = toBoundingBox(latLonBits(TEST_COMBINED_BITS_2))
 
         assertDoubleEquals(
             boundingBox2.centerCoordinate.latitude,
@@ -50,7 +50,7 @@ class GeohashUtilsTest {
             approxLongitudeError(TEST_CHAR_PRECISION_2)
         )
 
-        val boundingBox3 = toBoundingBox(LatLonBits(TEST_COMBINED_BITS_3))
+        val boundingBox3 = toBoundingBox(latLonBits(TEST_COMBINED_BITS_3))
 
         assertDoubleEquals(
             boundingBox3.centerCoordinate.latitude,
@@ -67,7 +67,7 @@ class GeohashUtilsTest {
     @Test
     fun toBoundingBox_validation_check() {
         assertFailsWith<IllegalArgumentException>("Invalid hash bits! Geohash must be between 1 and $MAX_CHAR_PRECISION characters") {
-            toBoundingBox(LatLonBits(15L))
+            toBoundingBox(latLonBits(15L))
         }
     }
 
@@ -104,7 +104,7 @@ class GeohashUtilsTest {
     @Test
     fun toGeohashString_validation_check() {
         assertFailsWith<IllegalArgumentException>("Invalid hash bits! Geohash must be between 1 and $MAX_CHAR_PRECISION characters") {
-            toGeohashString(LatLonBits(15L))
+            toGeohashString(latLonBits(15L))
         }
     }
 

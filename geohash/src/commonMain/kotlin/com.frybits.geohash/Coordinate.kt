@@ -4,15 +4,12 @@ package com.frybits.geohash
  * Frybits
  * Created by Pablo Baxter (Github: pablobaxter)
  *
- * Lat/Lon Pojo
- *
  * @constructor Creates a coordinate object
  *
  * @property latitude Latitude, guaranteed to be between -90 and 90
  * @property longitude Longitude, guaranteed to be between -180 and 180
  *
  * @throws IllegalArgumentException if [latitude] outside of -90 to 90 degrees, or if any [longitude] is outside of -180 to 180 degrees.
- *
  */
 
 class Coordinate(val latitude: Double, val longitude: Double) {

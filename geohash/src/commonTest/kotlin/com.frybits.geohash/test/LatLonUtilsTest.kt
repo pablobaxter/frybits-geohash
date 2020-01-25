@@ -1,8 +1,8 @@
 package com.frybits.geohash.test
 
 import com.frybits.geohash.MAX_CHAR_PRECISION
-import com.frybits.geohash.internal.LatLonBits
 import com.frybits.geohash.internal.evenOddBitsRightAligned
+import com.frybits.geohash.internal.latLonBits
 import com.frybits.geohash.internal.recombineBits
 import kotlin.random.Random
 import kotlin.test.Test
@@ -68,30 +68,30 @@ class LatLonUtilsTest {
 
     @Test
     fun compare_LatLonBits() {
-        val latLonBits1 = LatLonBits(
+        val latLonBits1 = latLonBits(
             TEST_LAT_BITS_1,
             TEST_LON_BITS_1,
             TEST_CHAR_PRECISION_1
         )
-        val combinedBits1 = LatLonBits(TEST_COMBINED_BITS_1)
+        val combinedBits1 = latLonBits(TEST_COMBINED_BITS_1)
 
         assertEquals(latLonBits1, combinedBits1)
 
-        val latLonBits2 = LatLonBits(
+        val latLonBits2 = latLonBits(
             TEST_LAT_BITS_2,
             TEST_LON_BITS_2,
             TEST_CHAR_PRECISION_2
         )
-        val combinedBits2 = LatLonBits(TEST_COMBINED_BITS_2)
+        val combinedBits2 = latLonBits(TEST_COMBINED_BITS_2)
 
         assertEquals(latLonBits2, combinedBits2)
 
-        val latLonBits3 = LatLonBits(
+        val latLonBits3 = latLonBits(
             TEST_LAT_BITS_3,
             TEST_LON_BITS_3,
             TEST_CHAR_PRECISION_3
         )
-        val combinedBits3 = LatLonBits(TEST_COMBINED_BITS_3)
+        val combinedBits3 = latLonBits(TEST_COMBINED_BITS_3)
 
         assertEquals(latLonBits3, combinedBits3)
     }

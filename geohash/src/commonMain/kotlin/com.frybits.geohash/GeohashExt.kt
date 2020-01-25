@@ -2,10 +2,11 @@
 
 package com.frybits.geohash
 
-import com.frybits.geohash.internal.LatLonBits
+import com.frybits.geohash.internal.latLonBits
 import kotlin.js.JsName
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmOverloads
+import kotlin.jvm.JvmSynthetic
 
 /**
  * Frybits
@@ -13,6 +14,35 @@ import kotlin.jvm.JvmOverloads
  *
  * Set of extension functions for Geohash class
  */
+
+/**
+ * Get a [Geohash] from the given [Coordinate]
+ *
+ * @param precision Character precision of the geohash
+ */
+@JvmOverloads
+@JsName("geohashFromCoordinate")
+@JvmName("geohashFromCoordinate")
+fun Coordinate.toGeohash(precision: Int = MAX_CHAR_PRECISION): Geohash = Geohash(latitude, longitude, precision)
+
+/**
+ * Get a [Geohash] from the given [BoundingBox]
+ *
+ * @param precision Character precision of the geohash
+ */
+@JvmOverloads
+@JsName("geohashFromBoundingBox")
+@JvmName("geohashFromBoundingBox")
+fun BoundingBox.toGeohash(precision: Int = MAX_CHAR_PRECISION): Geohash = Geohash(centerCoordinate, precision)
+
+/**
+ * Get a [Geohash] from the given [String]
+ */
+@JvmOverloads
+@JsName("geohashFromString")
+@JvmName("geohashFromString")
+fun String.toGeohash(): Geohash = Geohash(this)
+
 
 /**
  * Gets this geohash's neighbor at the given [direction]
@@ -25,56 +55,56 @@ import kotlin.jvm.JvmOverloads
 fun Geohash.neighborAt(direction: Direction): Geohash {
     return when (direction) {
         Direction.NORTH -> Geohash(
-            LatLonBits(
+            latLonBits(
                 latBits = latLonBits.latBits + 1,
                 lonBits = latLonBits.lonBits,
                 charPrecision = charPrecision
             )
         )
         Direction.NORTH_EAST -> Geohash(
-            LatLonBits(
+            latLonBits(
                 latBits = latLonBits.latBits + 1,
                 lonBits = latLonBits.lonBits + 1,
                 charPrecision = charPrecision
             )
         )
         Direction.EAST -> Geohash(
-            LatLonBits(
+            latLonBits(
                 latBits = latLonBits.latBits,
                 lonBits = latLonBits.lonBits + 1,
                 charPrecision = charPrecision
             )
         )
         Direction.SOUTH_EAST -> Geohash(
-            LatLonBits(
+            latLonBits(
                 latBits = latLonBits.latBits - 1,
                 lonBits = latLonBits.lonBits + 1,
                 charPrecision = charPrecision
             )
         )
         Direction.SOUTH -> Geohash(
-            LatLonBits(
+            latLonBits(
                 latBits = latLonBits.latBits - 1,
                 lonBits = latLonBits.lonBits,
                 charPrecision = charPrecision
             )
         )
         Direction.SOUTH_WEST -> Geohash(
-            LatLonBits(
+            latLonBits(
                 latBits = latLonBits.latBits - 1,
                 lonBits = latLonBits.lonBits - 1,
                 charPrecision = charPrecision
             )
         )
         Direction.WEST -> Geohash(
-            LatLonBits(
+            latLonBits(
                 latBits = latLonBits.latBits,
                 lonBits = latLonBits.lonBits - 1,
                 charPrecision = charPrecision
             )
         )
         Direction.NORTH_WEST -> Geohash(
-            LatLonBits(
+            latLonBits(
                 latBits = latLonBits.latBits + 1,
                 lonBits = latLonBits.lonBits - 1,
                 charPrecision = charPrecision
@@ -114,10 +144,12 @@ fun Geohash.surroundingGeohashes(includeSelf: Boolean = true): List<Geohash> {
  *
  * @return Next [Geohash]
  */
+@JsName("next")
+@JvmName("next")
 operator fun Geohash.inc(): Geohash {
     val insignificantBits = MAX_BIT_PRECISION - charPrecision * BITS_PER_CHAR
     val bits = ((ord() + 1) shl insignificantBits) or charPrecision.toLong()
-    return Geohash(LatLonBits(bits))
+    return Geohash(latLonBits(bits))
 }
 
 /**
@@ -126,15 +158,18 @@ operator fun Geohash.inc(): Geohash {
  *
  * @return Previous [Geohash]
  */
+@JsName("previous")
+@JvmName("previous")
 operator fun Geohash.dec(): Geohash {
     val insignificantBits = MAX_BIT_PRECISION - charPrecision * BITS_PER_CHAR
     val bits = ((ord() - 1) shl insignificantBits) or charPrecision.toLong()
-    return Geohash(LatLonBits(bits))
+    return Geohash(latLonBits(bits))
 }
 
 /**
  * Steps forward n times in the geohash Z-order at this geohash's precision
  */
+@JvmSynthetic
 operator fun Geohash.plus(steps: Int): Geohash {
     return this + steps.toLong()
 }
@@ -142,15 +177,18 @@ operator fun Geohash.plus(steps: Int): Geohash {
 /**
  * Steps forward n times in the geohash Z-order at this geohash's precision
  */
+@JsName("stepForward")
+@JvmName("stepForward")
 operator fun Geohash.plus(steps: Long): Geohash {
     val insignificantBits = MAX_BIT_PRECISION - charPrecision * BITS_PER_CHAR
     val bits = ((ord() + steps) shl insignificantBits) or charPrecision.toLong()
-    return Geohash(LatLonBits(bits))
+    return Geohash(latLonBits(bits))
 }
 
 /**
  * Steps backward n times in the geohash Z-order at this geohash's precision
  */
+@JvmSynthetic
 operator fun Geohash.minus(steps: Int): Geohash {
     return this - steps.toLong()
 }
@@ -158,10 +196,12 @@ operator fun Geohash.minus(steps: Int): Geohash {
 /**
  * Steps backward n times in the geohash Z-order at this geohash's precision
  */
+@JsName("stepBackward")
+@JvmName("stepBackward")
 operator fun Geohash.minus(steps: Long): Geohash {
     val insignificantBits = MAX_BIT_PRECISION - charPrecision * BITS_PER_CHAR
     val bits = ((ord() - steps) shl insignificantBits) or charPrecision.toLong()
-    return Geohash(LatLonBits(bits))
+    return Geohash(latLonBits(bits))
 }
 
 /**
