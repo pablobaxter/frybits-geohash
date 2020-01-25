@@ -1,20 +1,19 @@
 package com.frybits.geohash.internal
 
+import com.frybits.geohash.BITS_PER_CHAR
 import com.frybits.geohash.BoundingBox
+import com.frybits.geohash.GEOHASH_CHARS
+import com.frybits.geohash.LATITUDE_MAX
+import com.frybits.geohash.LATITUDE_MIN
+import com.frybits.geohash.LONGITUDE_MAX
+import com.frybits.geohash.LONGITUDE_MIN
+import com.frybits.geohash.MAX_BIT_PRECISION
 import com.frybits.geohash.MAX_CHAR_PRECISION
 
 /**
  * Frybits
  * Created by Pablo Baxter (Github: pablobaxter)
  */
-
-internal const val LATITUDE_MIN = -90.0
-internal const val LATITUDE_MAX = 90.0
-internal const val LONGITUDE_MIN = -180.0
-internal const val LONGITUDE_MAX = 180.0
-internal const val GEOHASH_CHARS = "0123456789bcdefghjkmnpqrstuvwxyz"
-internal const val MAX_BIT_PRECISION = 64
-internal const val BITS_PER_CHAR = 5
 
 private val BIT_MASKS = intArrayOf(16, 8, 4, 2, 1)
 private val GEOHASH_CHARS_DECODER = GEOHASH_CHARS

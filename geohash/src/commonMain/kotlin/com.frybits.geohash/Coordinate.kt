@@ -1,10 +1,5 @@
 package com.frybits.geohash
 
-import com.frybits.geohash.internal.LATITUDE_MAX
-import com.frybits.geohash.internal.LATITUDE_MIN
-import com.frybits.geohash.internal.LONGITUDE_MAX
-import com.frybits.geohash.internal.LONGITUDE_MIN
-
 /**
  * Frybits
  * Created by Pablo Baxter (Github: pablobaxter)

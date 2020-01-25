@@ -1,12 +1,20 @@
 package com.frybits.geohash.test
 
-import com.frybits.geohash.internal.GEOHASH_CHARS
+import com.frybits.geohash.Direction
+import com.frybits.geohash.GEOHASH_CHARS
 import com.frybits.geohash.Geohash
 import com.frybits.geohash.MAX_CHAR_PRECISION
-import com.frybits.geohash.internal.LATITUDE_MAX
-import com.frybits.geohash.internal.LATITUDE_MIN
-import com.frybits.geohash.internal.LONGITUDE_MAX
-import com.frybits.geohash.internal.LONGITUDE_MIN
+import com.frybits.geohash.LATITUDE_MAX
+import com.frybits.geohash.LATITUDE_MIN
+import com.frybits.geohash.LONGITUDE_MAX
+import com.frybits.geohash.LONGITUDE_MIN
+import com.frybits.geohash.dec
+import com.frybits.geohash.inc
+import com.frybits.geohash.minus
+import com.frybits.geohash.neighborAt
+import com.frybits.geohash.plus
+import com.frybits.geohash.stepsTo
+import com.frybits.geohash.surroundingGeohashes
 import kotlin.random.Random
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -212,14 +220,14 @@ class GeohashTest {
         val centerHash = Geohash("9u5tC2rep")
         centerHash.surroundingGeohashes(includeSelf = false).forEachIndexed { i, h ->
             when (i) {
-                0 -> assertEquals(centerHash.neighborAt(Geohash.Direction.NORTH), h)
-                1 -> assertEquals(centerHash.neighborAt(Geohash.Direction.NORTH_EAST), h)
-                2 -> assertEquals(centerHash.neighborAt(Geohash.Direction.EAST), h)
-                3 -> assertEquals(centerHash.neighborAt(Geohash.Direction.SOUTH_EAST), h)
-                4 -> assertEquals(centerHash.neighborAt(Geohash.Direction.SOUTH), h)
-                5 -> assertEquals(centerHash.neighborAt(Geohash.Direction.SOUTH_WEST), h)
-                6 -> assertEquals(centerHash.neighborAt(Geohash.Direction.WEST), h)
-                7 -> assertEquals(centerHash.neighborAt(Geohash.Direction.NORTH_WEST), h)
+                0 -> assertEquals(centerHash.neighborAt(Direction.NORTH), h)
+                1 -> assertEquals(centerHash.neighborAt(Direction.NORTH_EAST), h)
+                2 -> assertEquals(centerHash.neighborAt(Direction.EAST), h)
+                3 -> assertEquals(centerHash.neighborAt(Direction.SOUTH_EAST), h)
+                4 -> assertEquals(centerHash.neighborAt(Direction.SOUTH), h)
+                5 -> assertEquals(centerHash.neighborAt(Direction.SOUTH_WEST), h)
+                6 -> assertEquals(centerHash.neighborAt(Direction.WEST), h)
+                7 -> assertEquals(centerHash.neighborAt(Direction.NORTH_WEST), h)
                 else -> fail("Unexpected hash included: $h")
             }
         }

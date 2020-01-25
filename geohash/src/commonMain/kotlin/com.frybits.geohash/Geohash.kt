@@ -1,19 +1,10 @@
 package com.frybits.geohash
 
-import com.frybits.geohash.internal.BITS_PER_CHAR
-import com.frybits.geohash.internal.GEOHASH_CHARS
-import com.frybits.geohash.internal.LATITUDE_MAX
-import com.frybits.geohash.internal.LATITUDE_MIN
-import com.frybits.geohash.internal.LONGITUDE_MAX
-import com.frybits.geohash.internal.LONGITUDE_MIN
 import com.frybits.geohash.internal.LatLonBits
-import com.frybits.geohash.internal.MAX_BIT_PRECISION
 import com.frybits.geohash.internal.toBoundingBox
 import com.frybits.geohash.internal.toBoundingBoxAndBits
 import com.frybits.geohash.internal.toGeohashString
 import com.frybits.geohash.internal.toLatLonBits
-import kotlin.jvm.JvmName
-import kotlin.jvm.JvmOverloads
 import kotlin.math.min
 
 /**
@@ -58,7 +49,10 @@ class Geohash : Comparable<Geohash> {
      * @throws IllegalArgumentException If [latitude] is not between [LATITUDE_MIN] and [LATITUDE_MAX], if [longitude] is not between
      * [LONGITUDE_MIN] and [LONGITUDE_MAX], or if [charPrecision] is not between 1 and [MAX_CHAR_PRECISION]
      */
-    constructor(latitude: Double, longitude: Double, charPrecision: Int): this(Coordinate(latitude, longitude), charPrecision)
+    constructor(latitude: Double, longitude: Double, charPrecision: Int) : this(
+        Coordinate(latitude, longitude),
+        charPrecision
+    )
 
     /**
      * @param coordinates
@@ -109,179 +103,6 @@ class Geohash : Comparable<Geohash> {
      * Creates an iterable [GeohashRange] object from this geohash to the [other]
      */
     operator fun rangeTo(other: Geohash): GeohashRange = GeohashRange(this, other)
-
-    /**
-     * Enum class for getting geohash neighbors
-     */
-    enum class Direction {
-        NORTH,
-        NORTH_EAST,
-        EAST,
-        SOUTH_EAST,
-        SOUTH,
-        SOUTH_WEST,
-        WEST,
-        NORTH_WEST
-    }
-
-    /**
-     * Gets this geohash's neighbor at the given [direction]
-     *
-     * @return The [Geohash] at the given [direction]
-     */
-    @JvmName("getNeighbor")
-    fun neighborAt(direction: Direction): Geohash {
-        return when (direction) {
-            Direction.NORTH -> Geohash(
-                LatLonBits(
-                    latBits = latLonBits.latBits + 1,
-                    lonBits = latLonBits.lonBits,
-                    charPrecision = charPrecision
-                )
-            )
-            Direction.NORTH_EAST -> Geohash(
-                LatLonBits(
-                    latBits = latLonBits.latBits + 1,
-                    lonBits = latLonBits.lonBits + 1,
-                    charPrecision = charPrecision
-                )
-            )
-            Direction.EAST -> Geohash(
-                LatLonBits(
-                    latBits = latLonBits.latBits,
-                    lonBits = latLonBits.lonBits + 1,
-                    charPrecision = charPrecision
-                )
-            )
-            Direction.SOUTH_EAST -> Geohash(
-                LatLonBits(
-                    latBits = latLonBits.latBits - 1,
-                    lonBits = latLonBits.lonBits + 1,
-                    charPrecision = charPrecision
-                )
-            )
-            Direction.SOUTH -> Geohash(
-                LatLonBits(
-                    latBits = latLonBits.latBits - 1,
-                    lonBits = latLonBits.lonBits,
-                    charPrecision = charPrecision
-                )
-            )
-            Direction.SOUTH_WEST -> Geohash(
-                LatLonBits(
-                    latBits = latLonBits.latBits - 1,
-                    lonBits = latLonBits.lonBits - 1,
-                    charPrecision = charPrecision
-                )
-            )
-            Direction.WEST -> Geohash(
-                LatLonBits(
-                    latBits = latLonBits.latBits,
-                    lonBits = latLonBits.lonBits - 1,
-                    charPrecision = charPrecision
-                )
-            )
-            Direction.NORTH_WEST -> Geohash(
-                LatLonBits(
-                    latBits = latLonBits.latBits + 1,
-                    lonBits = latLonBits.lonBits - 1,
-                    charPrecision = charPrecision
-                )
-            )
-        }
-    }
-
-    /**
-     * Gets all geohashes surrounding this one
-     *
-     * @param includeSelf Whether to include this geohash in the returned list. Defaults to true
-     *
-     * @return [List] of geohashes surrounding this one
-     */
-    @JvmOverloads
-    @JvmName("getSurroundingGeohashes")
-    fun surroundingGeohashes(includeSelf: Boolean = true): List<Geohash> {
-        val self = if (includeSelf) listOf(this) else emptyList()
-
-        return listOf(
-            neighborAt(Direction.NORTH),
-            neighborAt(Direction.NORTH_EAST),
-            neighborAt(Direction.EAST),
-            neighborAt(Direction.SOUTH_EAST),
-            neighborAt(Direction.SOUTH),
-            neighborAt(Direction.SOUTH_WEST),
-            neighborAt(Direction.WEST),
-            neighborAt(Direction.NORTH_WEST)
-        ) + self
-    }
-
-    /**
-     * Steps to the next geohash in the Z-order (It's more like an N-order)
-     * If the last geohash in the series is reached, this rolls back to the first
-     *
-     * @return Next [Geohash]
-     */
-    operator fun inc(): Geohash {
-        val insignificantBits = MAX_BIT_PRECISION - charPrecision * BITS_PER_CHAR
-        val bits = ((ord() + 1) shl insignificantBits) or charPrecision.toLong()
-        return Geohash(LatLonBits(bits))
-    }
-
-    /**
-     * Steps to the previous geohash in the Z-order (It's more like an N-order)
-     * If the first geohash in the series is reached, this rolls to the last
-     *
-     * @return Previous [Geohash]
-     */
-    operator fun dec(): Geohash {
-        val insignificantBits = MAX_BIT_PRECISION - charPrecision * BITS_PER_CHAR
-        val bits = ((ord() - 1) shl insignificantBits) or charPrecision.toLong()
-        return Geohash(LatLonBits(bits))
-    }
-
-    /**
-     * Steps forward n times in the geohash Z-order at this geohash's precision
-     */
-    operator fun plus(steps: Int): Geohash {
-        return this + steps.toLong()
-    }
-
-    /**
-     * Steps forward n times in the geohash Z-order at this geohash's precision
-     */
-    operator fun plus(steps: Long): Geohash {
-        val insignificantBits = MAX_BIT_PRECISION - charPrecision * BITS_PER_CHAR
-        val bits = ((ord() + steps) shl insignificantBits) or charPrecision.toLong()
-        return Geohash(LatLonBits(bits))
-    }
-
-    /**
-     * Steps backward n times in the geohash Z-order at this geohash's precision
-     */
-    operator fun minus(steps: Int): Geohash {
-        return this - steps.toLong()
-    }
-
-    /**
-     * Steps backward n times in the geohash Z-order at this geohash's precision
-     */
-    operator fun minus(steps: Long): Geohash {
-        val insignificantBits = MAX_BIT_PRECISION - charPrecision * BITS_PER_CHAR
-        val bits = ((ord() - steps) shl insignificantBits) or charPrecision.toLong()
-        return Geohash(LatLonBits(bits))
-    }
-
-    /**
-     * Gives the number of steps needed to reach the given geohash from this geohash
-     * A negative number indicates that the other geohash is before this one.
-     *
-     * @throws IllegalArgumentException if the geohashes are of different precision
-     */
-    @JvmName("stepsBetween")
-    infix fun stepsTo(otherGeohash: Geohash): Long {
-        require(charPrecision == otherGeohash.charPrecision) { "Geohashes must be of the same precision to compare steps between" }
-        return otherGeohash.ord() - this.ord()
-    }
 
     /**
      * Checks if the given [geohash] is in this geohash. All geohashes contain themselves

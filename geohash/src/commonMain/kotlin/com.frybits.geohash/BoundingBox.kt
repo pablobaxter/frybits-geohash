@@ -1,10 +1,5 @@
 package com.frybits.geohash
 
-import com.frybits.geohash.internal.LATITUDE_MAX
-import com.frybits.geohash.internal.LATITUDE_MIN
-import com.frybits.geohash.internal.LONGITUDE_MAX
-import com.frybits.geohash.internal.LONGITUDE_MIN
-
 /**
  *
  * Frybits
@@ -14,13 +9,14 @@ import com.frybits.geohash.internal.LONGITUDE_MIN
  *
  * @constructor Creates new BoundingBox from given SW/NE points
  *
- * @property southWest Southwest point of this [BoundingBox]
- * @property northEast Northeast ponit of this [BoundingBox]
+ * @property southWestPoint Southwest point of this [BoundingBox]
+ * @property northEastPoint Northeast point of this [BoundingBox]
  *
  * @throws IllegalArgumentException if [minLat] is greater than [maxLat], if any of the latitudes is
  * outside of -90 to 90 degrees, or if any longitude is outside of -180 to 180 degrees.
  */
-class BoundingBox(val southWest: Coordinate, val northEast: Coordinate) {
+
+class BoundingBox(val southWestPoint: Coordinate, val northEastPoint: Coordinate) {
 
     /**
      * @param minLat Min (southern-most) latitude point of the box
@@ -38,15 +34,25 @@ class BoundingBox(val southWest: Coordinate, val northEast: Coordinate) {
         Coordinate(maxLat, maxLon)
     )
 
-    private val latRange = southWest.latitude..northEast.latitude
-    private val lonRange = southWest.longitude..northEast.longitude
+    private val latRange = southWestPoint.latitude..northEastPoint.latitude
+    private val lonRange = southWestPoint.longitude..northEastPoint.longitude
+
+    /**
+     * @property northWestPoint Northeast point of this [BoundingBox]
+     */
+    val northWestPoint = Coordinate(northEastPoint.latitude, southWestPoint.longitude)
+
+    /**
+     * @property southEastPoint Northeast point of this [BoundingBox]
+     */
+    val southEastPoint = Coordinate(southWestPoint.latitude, northEastPoint.longitude)
 
     /**
      * Center point of this box
      */
     val centerCoordinate = Coordinate(
-        (northEast.latitude + southWest.latitude) / 2,
-        ((northEast.longitude + southWest.longitude) / 2).let { if (it > 180) it - 360 else it }
+        (northEastPoint.latitude + southWestPoint.latitude) / 2,
+        ((northEastPoint.longitude + southWestPoint.longitude) / 2).let { if (it > 180) it - 360 else it }
     )
 
     /**
@@ -55,17 +61,17 @@ class BoundingBox(val southWest: Coordinate, val northEast: Coordinate) {
     val intersects180Meridian: Boolean
 
     init {
-        require(southWest.latitude < northEast.latitude) { "The southern most latitude must be greater than the northern most latitude" }
+        require(southWestPoint.latitude < northEastPoint.latitude) { "The southern most latitude must be greater than the northern most latitude" }
         require(
-            southWest.latitude in LATITUDE_MIN..LATITUDE_MAX &&
-                    northEast.latitude in LATITUDE_MIN..LATITUDE_MAX
+            southWestPoint.latitude in LATITUDE_MIN..LATITUDE_MAX &&
+                    northEastPoint.latitude in LATITUDE_MIN..LATITUDE_MAX
         ) { "Latitude must be between $LATITUDE_MIN and $LATITUDE_MAX" }
         require(
-            southWest.longitude in LONGITUDE_MIN..LONGITUDE_MAX &&
-                    northEast.longitude in LONGITUDE_MIN..LONGITUDE_MAX
+            southWestPoint.longitude in LONGITUDE_MIN..LONGITUDE_MAX &&
+                    northEastPoint.longitude in LONGITUDE_MIN..LONGITUDE_MAX
         ) { "Longitude must be between $LONGITUDE_MIN and $LONGITUDE_MAX" }
 
-        this.intersects180Meridian = northEast.longitude < southWest.longitude
+        this.intersects180Meridian = northEastPoint.longitude < southWestPoint.longitude
     }
 
     /**
@@ -76,14 +82,14 @@ class BoundingBox(val southWest: Coordinate, val northEast: Coordinate) {
      * @return If this box intersects the other box (this includes tangent boxes), return true else false
      */
     fun intersects(other: BoundingBox): Boolean {
-        if (other.southWest.latitude > northEast.latitude || other.northEast.latitude < southWest.latitude) return false
+        if (other.southWestPoint.latitude > northEastPoint.latitude || other.northEastPoint.latitude < southWestPoint.latitude) return false
 
         return if (!intersects180Meridian && !other.intersects180Meridian) {
-            other.northEast.longitude >= southWest.longitude && other.southWest.longitude <= northEast.longitude
+            other.northEastPoint.longitude >= southWestPoint.longitude && other.southWestPoint.longitude <= northEastPoint.longitude
         } else if (intersects180Meridian && !other.intersects180Meridian) {
-            northEast.longitude >= other.southWest.longitude || southWest.longitude <= other.northEast.longitude
+            northEastPoint.longitude >= other.southWestPoint.longitude || southWestPoint.longitude <= other.northEastPoint.longitude
         } else if (!intersects180Meridian && other.intersects180Meridian) {
-            southWest.longitude <= other.northEast.longitude || northEast.longitude >= other.southWest.longitude
+            southWestPoint.longitude <= other.northEastPoint.longitude || northEastPoint.longitude >= other.southWestPoint.longitude
         } else {
             true
         }
@@ -104,7 +110,7 @@ class BoundingBox(val southWest: Coordinate, val northEast: Coordinate) {
      */
     fun contains(lat: Double, lon: Double): Boolean {
         return lat in latRange && if (intersects180Meridian) {
-            lon <= northEast.longitude || lon >= southWest.longitude
+            lon <= northEastPoint.longitude || lon >= southWestPoint.longitude
         } else {
             lon in lonRange
         }
@@ -114,14 +120,14 @@ class BoundingBox(val southWest: Coordinate, val northEast: Coordinate) {
         if (this === other) return true
         if (other !is BoundingBox) return false
 
-        if (southWest != other.southWest) return false
-        if (northEast != other.northEast) return false
+        if (southWestPoint != other.southWestPoint) return false
+        if (northEastPoint != other.northEastPoint) return false
         return true
     }
 
     override fun hashCode(): Int {
-        var result = southWest.hashCode()
-        result = 31 * result + northEast.hashCode()
+        var result = southWestPoint.hashCode()
+        result = 31 * result + northEastPoint.hashCode()
         return result
     }
 
