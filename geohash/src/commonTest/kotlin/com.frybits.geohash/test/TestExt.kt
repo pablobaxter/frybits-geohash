@@ -56,11 +56,14 @@ fun Random.latitude(): Double = nextDouble(-90.0, 90.0)
 
 fun Random.longitude(): Double = nextDouble(-180.0, 180.0)
 
-fun Random.precision(maxCharPrecision: Int = MAX_CHAR_PRECISION): Int = nextInt(1, maxCharPrecision)
+fun Random.precision(minCharPrecision: Int = 1, maxCharPrecision: Int = MAX_CHAR_PRECISION): Int {
+    require(minCharPrecision >= 1 && maxCharPrecision <= MAX_CHAR_PRECISION)
+    return nextInt(minCharPrecision, maxCharPrecision)
+}
 
-fun Random.geoHash(minCharPrecision: Int = 1, maxCharPrecision: Int = MAX_CHAR_PRECISION, randomUppercase: Boolean = true): Geohash = Geohash(
+fun Random.geoHash(charPrecision: Int = Random.precision(), randomUppercase: Boolean = true): Geohash = Geohash(
     buildString {
-        repeat(nextInt(minCharPrecision, maxCharPrecision)) {
+        repeat(charPrecision) {
             append(GEOHASH_CHARS.random(this@geoHash).let { if (randomUppercase && Random.nextBoolean()) it.toUpperCase() else it })
         }
     })

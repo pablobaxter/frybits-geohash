@@ -113,6 +113,7 @@ class Geohash : Comparable<Geohash> {
     /**
      * Checks if the given [geohash] is in this geohash. All geohashes contain themselves
      */
+    // TODO Maybe use bits to check contains?
     @JsName("containsGeohash")
     fun contains(geohash: Geohash): Boolean = contains(geohash.geohash)
 

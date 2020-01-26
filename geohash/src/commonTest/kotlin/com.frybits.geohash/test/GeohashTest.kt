@@ -310,7 +310,7 @@ class GeohashTest {
     @Test
     fun geohash_contains_checks() {
         repeat(REPEAT_TEST_COUNT) {
-            val testHash = Random.geoHash(Random.nextInt(2, 10))
+            val testHash = Random.geoHash(Random.precision(2, 10))
             var hash = testHash.geohash
             while (hash.length <= MAX_CHAR_PRECISION) {
                 assertTrue { testHash.contains(hash) }
@@ -322,7 +322,7 @@ class GeohashTest {
     @Test
     fun geohash_not_contains_checks() {
         repeat(REPEAT_TEST_COUNT) {
-            var testHash = Random.geoHash(Random.nextInt(2, 10))
+            var testHash = Random.geoHash(Random.precision(2, 10))
             var hash = testHash++.geohash
             while (hash.length <= MAX_CHAR_PRECISION) {
                 assertFalse { testHash.contains(hash) }
@@ -349,7 +349,7 @@ class GeohashTest {
     @Test
     fun geohash_comparison_different_precision() {
         repeat(REPEAT_TEST_COUNT) {
-            val randomGeohash1 = Random.geoHash(9)
+            val randomGeohash1 = Random.geoHash(Random.precision(maxCharPrecision = 9))
             val randomGeohash2 = Geohash(randomGeohash1.geohash + GEOHASH_CHARS.random())
 
             assertTrue { randomGeohash1 <= randomGeohash2 }

@@ -2,6 +2,7 @@ package com.frybits.geohash.test
 
 import com.frybits.geohash.GEOHASH_CHARS
 import com.frybits.geohash.Geohash
+import com.frybits.geohash.MAX_CHAR_PRECISION
 import kotlin.random.Random
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -29,9 +30,9 @@ class GeohashRangeTest {
     @Test
     fun range_contains_checks() {
         // Essentially range through all geohashes
-        val range = (Geohash("000")..Geohash("zzz"))
+        val range = (Geohash("000000000000")..Geohash("zzzzzzzzzzzz"))
         repeat(REPEAT_TEST_COUNT) {
-            val testHash = Random.geoHash(minCharPrecision = 3)
+            val testHash = Random.geoHash(MAX_CHAR_PRECISION)
             assertTrue(testHash.geohash) { range.contains(testHash) }
         }
     }
@@ -41,7 +42,7 @@ class GeohashRangeTest {
         val range = (Geohash("zzz")..Geohash("000"))
         assertTrue { range.isEmpty() }
         repeat(REPEAT_TEST_COUNT) {
-            val testHash = Random.geoHash(minCharPrecision = 3)
+            val testHash = Random.geoHash(Random.precision(maxCharPrecision = 3))
             assertFalse(testHash.geohash) { range.contains(testHash) }
         }
     }

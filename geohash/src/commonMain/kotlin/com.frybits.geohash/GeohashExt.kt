@@ -38,7 +38,6 @@ fun BoundingBox.toGeohash(precision: Int = MAX_CHAR_PRECISION): Geohash = Geohas
 /**
  * Get a [Geohash] from the given [String]
  */
-@JvmOverloads
 @JsName("geohashFromString")
 @JvmName("geohashFromString")
 fun String.toGeohash(): Geohash = Geohash(this)
