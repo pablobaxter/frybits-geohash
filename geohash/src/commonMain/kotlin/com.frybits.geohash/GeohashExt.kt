@@ -137,6 +137,49 @@ fun Geohash.surroundingGeohashes(includeSelf: Boolean = true): List<Geohash> {
 }
 
 /**
+ * Gets the [Geohash] containing this [Geohash]. Ex. '13bcd' has the parent '13bc'
+ * Will return [null] if this [Geohash] has no parent (single character geohash)
+ */
+val Geohash.parent: Geohash?
+    get() {
+        return if (charPrecision == 1) {
+            null
+        } else {
+            // This drops the last 5 bits of this geohash
+            val newOrd = ord() ushr BITS_PER_CHAR
+
+            // Left aligns the bits according to the new charPrecision (parent always has one less character)
+            val newCombinedBits = newOrd shl (MAX_BIT_PRECISION - (charPrecision - 1) * BITS_PER_CHAR)
+
+            // Add the new precision to the bits, and generate a new geohash object from it
+            Geohash(latLonBits(newCombinedBits or (charPrecision - 1L)))
+        }
+    }
+
+/**
+ * Gets all the geohashes this geohash contains.
+ *
+ * @return [List] of geohashes this contains
+ */
+fun Geohash.children(): List<Geohash> {
+    // We're already at cm accuracy, but if you're looking for something more accurate...
+    // https://github.com/pablobaxter/frybits-geohash/blob/master/accuracy-message.png
+    if (charPrecision == MAX_CHAR_PRECISION) return emptyList()
+
+    // Get the ord for the first child hash
+    val childStartOrd = ord() shl BITS_PER_CHAR
+
+    // Get the ord for the last child hash
+    val childEndOrd = childStartOrd + GEOHASH_CHARS.length - 1
+    val insignificantBits = MAX_BIT_PRECISION - (charPrecision + 1) * BITS_PER_CHAR // Increase charPrecision
+    val startGeohash = Geohash(latLonBits((childStartOrd shl insignificantBits) or (charPrecision + 1L)))
+    val endGeohash = Geohash(latLonBits((childEndOrd shl insignificantBits) or (charPrecision + 1L)))
+
+    // Generate all the hashes between the first and last geohash into a list
+    return (startGeohash..endGeohash).toList()
+}
+
+/**
  * Steps to the next geohash in the Z-order (It's more like an N-order)
  * If the last geohash in the series is reached, this rolls back to the first
  *

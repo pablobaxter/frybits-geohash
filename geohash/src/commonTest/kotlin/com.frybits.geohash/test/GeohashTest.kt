@@ -8,10 +8,12 @@ import com.frybits.geohash.LATITUDE_MAX
 import com.frybits.geohash.LATITUDE_MIN
 import com.frybits.geohash.LONGITUDE_MAX
 import com.frybits.geohash.LONGITUDE_MIN
+import com.frybits.geohash.children
 import com.frybits.geohash.dec
 import com.frybits.geohash.inc
 import com.frybits.geohash.minus
 import com.frybits.geohash.neighborAt
+import com.frybits.geohash.parent
 import com.frybits.geohash.plus
 import com.frybits.geohash.stepsTo
 import com.frybits.geohash.surroundingGeohashes
@@ -308,7 +310,7 @@ class GeohashTest {
     }
 
     @Test
-    fun geohash_contains_checks() {
+    fun geohash_contains_string_checks() {
         repeat(REPEAT_TEST_COUNT) {
             val testHash = Random.geoHash(Random.precision(2, 10))
             var hash = testHash.geohash
@@ -320,12 +322,36 @@ class GeohashTest {
     }
 
     @Test
-    fun geohash_not_contains_checks() {
+    fun geohash_contains_geohash_test() {
+        repeat(REPEAT_TEST_COUNT) {
+            val testHash = Random.geoHash(Random.precision(2, 10))
+            var hash = testHash.geohash
+            while (hash.length <= MAX_CHAR_PRECISION) {
+                assertTrue { testHash.contains(Geohash(hash)) }
+                hash += GEOHASH_CHARS.random()
+            }
+        }
+    }
+
+    @Test
+    fun geohash_not_contains_string_checks() {
         repeat(REPEAT_TEST_COUNT) {
             var testHash = Random.geoHash(Random.precision(2, 10))
             var hash = testHash++.geohash
             while (hash.length <= MAX_CHAR_PRECISION) {
                 assertFalse { testHash.contains(hash) }
+                hash += GEOHASH_CHARS.random()
+            }
+        }
+    }
+
+    @Test
+    fun geohash_not_contains_geohash_test() {
+        repeat(REPEAT_TEST_COUNT) {
+            var testHash = Random.geoHash(Random.precision(2, 10))
+            var hash = testHash++.geohash
+            while (hash.length <= MAX_CHAR_PRECISION) {
+                assertFalse { testHash.contains(Geohash(hash)) }
                 hash += GEOHASH_CHARS.random()
             }
         }
@@ -375,5 +401,34 @@ class GeohashTest {
         assertTrue { geohash1 < geohash2 } // Geohash1 is less precise, therefore less than
         // Geohash2 is more precise, therefore greater than
         assertTrue { geohash2 > geohash1 }
+    }
+
+    @Test
+    fun geohash_parent_check() {
+        repeat(REPEAT_TEST_COUNT) {
+            var testHash: Geohash? = Random.geoHash(MAX_CHAR_PRECISION)
+            while (testHash != null) {
+                assertEquals(testHash.geohash.dropLast(1).ifEmpty { null }, testHash.parent?.geohash)
+                testHash = testHash.parent
+            }
+        }
+    }
+
+    @Test
+    fun geohash_children_check() {
+        repeat(REPEAT_TEST_COUNT) {
+            val testHash = Random.geoHash(Random.precision(11))
+            testHash.children().forEachIndexed { i, g ->
+                assertEquals(testHash.geohash + GEOHASH_CHARS[i], g.geohash, "Test hash: ${testHash.geohash}")
+            }
+        }
+    }
+
+    @Test
+    fun geohash_children_validation() {
+        repeat(REPEAT_TEST_COUNT) {
+            val testHash = Random.geoHash(MAX_CHAR_PRECISION)
+            assertTrue { testHash.children().isEmpty() }
+        }
     }
 }

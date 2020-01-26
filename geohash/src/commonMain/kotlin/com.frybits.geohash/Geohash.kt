@@ -2,6 +2,7 @@ package com.frybits.geohash
 
 import com.frybits.geohash.internal.LatLonBits
 import com.frybits.geohash.internal.geohashRange
+import com.frybits.geohash.internal.latLonBits
 import com.frybits.geohash.internal.toBoundingBox
 import com.frybits.geohash.internal.toBoundingBoxAndBits
 import com.frybits.geohash.internal.toGeohashString
@@ -113,9 +114,17 @@ class Geohash : Comparable<Geohash> {
     /**
      * Checks if the given [geohash] is in this geohash. All geohashes contain themselves
      */
-    // TODO Maybe use bits to check contains?
     @JsName("containsGeohash")
-    fun contains(geohash: Geohash): Boolean = contains(geohash.geohash)
+    fun contains(geohash: Geohash): Boolean {
+        // A bigger geohash is never inside a smaller one
+        if (charPrecision > geohash.charPrecision) return false
+        // A geohash always contains itself
+        if (this == geohash) return true
+
+        val insignificantBits = MAX_BIT_PRECISION - charPrecision * BITS_PER_CHAR
+        val otherOrdAtPrecision = geohash.latLonBits.combinedBits ushr insignificantBits
+        return ord() == otherOrdAtPrecision
+    }
 
     /**
      * Checks if the given [geohash] string is in this geohash. All geohashes contain themselves
@@ -144,11 +153,7 @@ class Geohash : Comparable<Geohash> {
         if (this === other) return true
         if (other !is Geohash) return false
 
-        return coordinate == other.coordinate &&
-                charPrecision == other.charPrecision &&
-                geohash == other.geohash &&
-                latLonBits == other.latLonBits &&
-                boundingBox == other.boundingBox
+        return charPrecision == other.charPrecision && ord() == other.ord()
     }
 
     override fun hashCode(): Int {
@@ -182,8 +187,10 @@ class Geohash : Comparable<Geohash> {
         }
     }
 
-    // The Z-order position of this geohash at the given precision
-    internal fun ord(): Long {
+    /**
+     * Integer value of this geohash using only the significant bits. Can be used as a key instead of the geohash string
+     */
+    fun ord(): Long {
         val insignificantBits = MAX_BIT_PRECISION - charPrecision * BITS_PER_CHAR
         return latLonBits.combinedBits ushr insignificantBits
     }

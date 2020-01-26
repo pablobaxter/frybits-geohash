@@ -125,9 +125,7 @@ class BoundingBox(val southWestPoint: Coordinate, val northEastPoint: Coordinate
         if (this === other) return true
         if (other !is BoundingBox) return false
 
-        if (southWestPoint != other.southWestPoint) return false
-        if (northEastPoint != other.northEastPoint) return false
-        return true
+        return southWestPoint == other.southWestPoint && northEastPoint == other.northEastPoint
     }
 
     override fun hashCode(): Int {

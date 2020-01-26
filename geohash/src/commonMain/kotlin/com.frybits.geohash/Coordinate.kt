@@ -23,10 +23,7 @@ class Coordinate(val latitude: Double, val longitude: Double) {
         if (this === other) return true
         if (other !is Coordinate) return false
 
-        if (latitude != other.latitude) return false
-        if (longitude != other.longitude) return false
-
-        return true
+        return latitude == other.latitude && longitude == other.longitude
     }
 
     override fun hashCode(): Int {
