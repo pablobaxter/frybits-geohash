@@ -28,3 +28,17 @@ fun Coordinate.toLocation(geohash:String = "geohash"): Location = Location(geoha
 val Geohash.location: Location
     get() = coordinate.toLocation(geohash)
 
+val BoundingBox.northEastLocation: Location
+    get() = northEastPoint.toLocation("bbox")
+
+val BoundingBox.southEastLocation: Location
+    get() = southEastPoint.toLocation("bbox")
+
+val BoundingBox.northWestLocation: Location
+    get() = northWestPoint.toLocation("bbox")
+
+val BoundingBox.southWestLocation: Location
+    get() = southWestPoint.toLocation("bbox")
+
+val BoundingBox.centerLocation: Location
+    get() = centerCoordinate.toLocation("bbox")

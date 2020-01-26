@@ -42,7 +42,6 @@ fun BoundingBox.toGeohash(precision: Int = MAX_CHAR_PRECISION): Geohash = Geohas
 @JvmName("geohashFromString")
 fun String.toGeohash(): Geohash = Geohash(this)
 
-
 /**
  * Gets this geohash's neighbor at the given [direction]
  *
