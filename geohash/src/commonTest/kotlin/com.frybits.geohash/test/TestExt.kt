@@ -78,9 +78,13 @@ fun Geohash.isLast(): Boolean {
     return consecutiveOnBits == charPrecision * BITS_PER_CHAR
 }
 
-fun approxLatitudeError(precision: Int) = 90.0 / 2.0.pow(precision + 1)
-
-fun approxLongitudeError(precision: Int) = 180.0 / 2.0.pow(precision + 1)
+// This gives approximate lat/lon error given the precision
+fun approxLatitudeError(precision: Int) = 90.0 / 2.0.pow(approxCoordinateBits(precision))
+fun approxLongitudeError(precision: Int): Double {
+    val bits = approxCoordinateBits(precision)
+    // When precision is odd, there is one extra longitude bit, otherwise it has equal latitude and longitude bits
+    return 180.0 / 2.0.pow(if (precision % 2 == 0) bits else bits + 1)
+}
 
 fun assertFloatEquals(expected: Float, actual: Float, epsilon: Float, message: String? = null) {
     assertTrue(message) { abs(actual - expected) < epsilon }
@@ -89,3 +93,6 @@ fun assertFloatEquals(expected: Float, actual: Float, epsilon: Float, message: S
 fun assertDoubleEquals(expected: Double, actual: Double, epsilon: Double, message: String? = null) {
     assertTrue(message) { abs(actual - expected) < epsilon }
 }
+
+// Gives number of bits used for either latitude or longitude
+private fun approxCoordinateBits(precision: Int): Int = (precision * BITS_PER_CHAR / 2)

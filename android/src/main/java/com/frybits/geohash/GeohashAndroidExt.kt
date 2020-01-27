@@ -20,7 +20,7 @@ fun Location.toGeohash(precision: Int = MAX_CHAR_PRECISION): Geohash = Geohash(l
 
 @JvmOverloads
 @JvmName("locationFromCoordinate")
-fun Coordinate.toLocation(geohash:String = "geohash"): Location = Location(geohash).apply {
+fun Coordinate.toLocation(geohash:String = "coordinate"): Location = Location(geohash).apply {
     latitude = this@toLocation.latitude
     longitude = this@toLocation.longitude
 }
