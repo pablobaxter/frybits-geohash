@@ -2,14 +2,12 @@ package com.frybits.geohash.test
 
 import android.location.Location
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.frybits.geohash.BITS_PER_CHAR
 import com.frybits.geohash.Geohash
 import com.frybits.geohash.location
 import com.frybits.geohash.toGeohash
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith
-import kotlin.math.abs
 import kotlin.math.pow
 
 /**
