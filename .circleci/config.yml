@@ -43,6 +43,7 @@ jobs:
   Javascript-Browser-Test:
     docker:
       # specify the version you desire here
+      - image: circleci/openjdk:8-jdk
       - image: circleci/node:7.10.1-browsers
 
     working_directory: ~/repo
@@ -73,6 +74,7 @@ jobs:
   Javascript-Node-Test:
     docker:
       # specify the version you desire here
+      - image: circleci/openjdk:8-jdk
       - image: circleci/node:9.6.1
 
     working_directory: ~/repo
