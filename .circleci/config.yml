@@ -44,8 +44,9 @@ jobs:
     docker:
       # specify the version you desire here
       - image: circleci/openjdk:8-jdk
-      - image: circleci/node:7.10.1-browsers
-      - image: selenium/standalone-chrome:3.1.0
+      - image: circleci/node:6-browsers
+          environment:
+            CHROME_BIN: "/usr/bin/google-chrome"
 
     working_directory: ~/repo
 
