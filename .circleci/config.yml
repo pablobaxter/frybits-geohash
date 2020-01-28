@@ -1,10 +1,6 @@
-# Java Gradle CircleCI 2.0 configuration file
-#
-# Check https://circleci.com/docs/2.0/language-java/ for more details
-#
 version: 2
 jobs:
-  build:
+  JVM-Test:
     docker:
       # specify the version you desire here
       - image: circleci/openjdk:8-jdk
@@ -27,11 +23,11 @@ jobs:
       # Download and cache dependencies
       - restore_cache:
           keys:
-            - v1-dependencies-{{ checksum "build.gradle" }}
+            - v1-dependencies-{{ checksum "geohash/build.gradle" }}
             # fallback to using the latest cache if no exact match is found
             - v1-dependencies-
 
-      - run: ./gradlew dependencies
+      - run: ./gradlew :geohash:dependencies
 
       - save_cache:
           paths:
@@ -43,3 +39,71 @@ jobs:
 
       - store_test_results:
           path: geohash/build/test-results
+
+  Javascript-Browser-Test:
+    docker:
+      # specify the version you desire here
+      - image: circleci/node:7.10.1-browsers
+
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "geohash/build.gradle" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
+
+      - run: ./gradlew :geohash:dependencies
+
+      - save_cache:
+          paths:
+            - ~/.gradle
+          key: v1-dependencies-{{ checksum "build.gradle" }}
+
+      # run tests!
+      - run: ./gradlew jsBrowserTest
+
+      - store_test_results:
+          path: geohash/build/test-results
+
+  Javascript-Node-Test:
+    docker:
+      # specify the version you desire here
+      - image: circleci/node:9.6.1
+
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "geohash/build.gradle" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
+
+      - run: ./gradlew :geohash:dependencies
+
+      - save_cache:
+          paths:
+            - ~/.gradle
+          key: v1-dependencies-{{ checksum "build.gradle" }}
+
+      # run tests!
+      - run: ./gradlew jsNodeTest
+
+      - store_test_results:
+          path: geohash/build/test-results
+
+workflows:
+  version: 2
+  Tests:
+    - JVM-Test
+    - Javascript-Browser-Test
+    - Javascript-Node-Test
+
