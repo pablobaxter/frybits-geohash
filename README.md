@@ -3,13 +3,11 @@ A pure Kotlin/Multiplatform geohashing library.
 
 What is a [Geohash](https://en.wikipedia.org/wiki/Geohash)? TL;DR - It is an encoded representation of a geographic location as a string.
 
-Supported Platforms:
-- Java
+**Current Supported Platforms:**
+- Java 8
 - Android API 14+ (It's the Java library with some extra extension functions)
-- Javascript
-- Kotlin Native
 
-## Current Project Status
+## Project Status
 This project is actively being worked on, but the `Geohash` class and extension functions are completed. The following are a list of tasks and their current status:
 
 - Geohash algorithm - `DONE`
@@ -26,6 +24,56 @@ This project is actively being worked on, but the `Geohash` class and extension 
   - Android - `INCOMPLETE`
   - iOS - `INCOMPLETE`
   - Native `INCOMPLETE`
+  
+## Download
+
+Coming soon!
+
+## Usage
+
+Kotlin
+
+```kotlin
+// Generating a simple geohash
+val geohash = Geohash(31.0123, 115.0123, 10)
+println(geohash.geohash) // wt9b3jt7sz
+
+// Get a neighbor
+val north = geohash.neighborAt(Direction.NORTH)
+println(north.geohash) // wt9b3jt7ub
+
+// Get all neighbors
+val neighbors = geohash.surroundingGeohashes(includeSelf = true) // Include self in the list of neighbors
+println(neighbors) // Prints all neighbors starting from NORTH and going clockwise
+
+// Getting children geohashes
+geohash.children().forEach { g -> 
+    println(g.geohash) // Prints all children of "wt9b3jt7sz"
+}
+```
+
+Java
+
+```java
+// Generating a simple geohash
+Geohash geohash = Geohash(31.0123, 115.0123, 10);
+System.out.println(geohash.getGeohash()); // wt9b3jt7sz
+
+// Get a neighbor
+Geohash north = geohash.getNeighbor(Direction.NORTH);
+System.out.println(north.getGeohash()); // wt9b3jt7ub
+
+// Get all neighbors
+List<Geohash> neighbors = geohash.getSurroundingGeohashes(true); // Include self in the list of neighbors
+System.out.println(neighbors); // Prints all neighbors starting from NORTH and going clockwise
+
+// Getting children geohashes
+for (Geohash g : geohash.children()) {
+    System.out.println(g.getGeohash()); // Prints all children of "wt9b3jt7sz"
+}
+```
+
+> *Others coming soon*
 
 ## License
 ```MIT License
