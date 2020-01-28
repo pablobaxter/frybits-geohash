@@ -41,5 +41,5 @@ jobs:
       # run tests!
       - run: ./gradlew jvmTest
 
-      - store_test_results
+      - store_test_results:
           path: test-results
