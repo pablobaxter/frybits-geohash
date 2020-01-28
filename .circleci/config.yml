@@ -43,10 +43,10 @@ jobs:
   Javascript-Browser-Test:
     docker:
       # specify the version you desire here
-      - image: circleci/openjdk:8-jdk
-      - image: circleci/node:6-browsers
-        environment:
-          CHROME_BIN: "/usr/bin/google-chrome"
+      - image: circleci/openjdk:8-jdk-node-browsers
+
+    environment:
+      CHROME_BIN: "/usr/bin/google-chrome"
 
     working_directory: ~/repo
 
@@ -76,8 +76,7 @@ jobs:
   Javascript-Node-Test:
     docker:
       # specify the version you desire here
-      - image: circleci/openjdk:8-jdk
-      - image: circleci/node:9.6.1
+      - image: circleci/openjdk:8-jdk-node
 
     working_directory: ~/repo
 
