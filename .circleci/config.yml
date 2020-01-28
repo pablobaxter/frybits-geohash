@@ -103,6 +103,36 @@ jobs:
       - store_test_results:
           path: geohash/build/test-results
 
+  Linux-Native-Test:
+    docker:
+      # specify the version you desire here
+      - image: circleci/openjdk:8-jdk
+
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "geohash/build.gradle" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
+
+      - run: ./gradlew :geohash:dependencies
+
+      - save_cache:
+          paths:
+            - ~/.gradle
+          key: v1-dependencies-{{ checksum "build.gradle" }}
+
+      # run tests!
+      - run: ./gradlew linuxTest
+
+      - store_test_results:
+          path: geohash/build/test-results
+
 workflows:
   version: 2
   Tests:
@@ -110,4 +140,5 @@ workflows:
       - JVM-Test
       - Javascript-Browser-Test
       - Javascript-Node-Test
+      - Linux-Native-Test
 
