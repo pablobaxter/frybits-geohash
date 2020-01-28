@@ -60,16 +60,11 @@ jobs:
             # fallback to using the latest cache if no exact match is found
             - v1-dependencies-
 
-      - run:
-          name: Download dependencies
-          command: |
-            ./gradlew :geohash:dependencies
-            ./gradlew :geohash:compileKotlinLinux
+      - run: ./gradlew :geohash:dependencies
 
       - save_cache:
           paths:
             - ~/.gradle
-            - ~/.konan/dependencies
           key: v1-dependencies-{{ checksum "build.gradle" }}
 
       # run tests!
@@ -124,13 +119,17 @@ jobs:
             - v1-dependencies-{{ checksum "geohash/build.gradle" }}
             # fallback to using the latest cache if no exact match is found
             - v1-dependencies-
-            - linux-dependencies
 
-      - run: ./gradlew :geohash:dependencies
+      - run:
+          name: Download dependencies
+          command: |
+            ./gradlew :geohash:dependencies
+            ./gradlew :geohash:compileKotlinLinux
 
       - save_cache:
           paths:
             - ~/.gradle
+            - ~/.konan/dependencies
           key: v1-dependencies-{{ checksum "build.gradle" }}
 
       # run tests!
