@@ -45,6 +45,7 @@ jobs:
       # specify the version you desire here
       - image: circleci/openjdk:8-jdk
       - image: circleci/node:7.10.1-browsers
+      - image: selenium/standalone-chrome:3.1.0
 
     working_directory: ~/repo
 
