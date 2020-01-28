@@ -120,6 +120,12 @@ jobs:
             # fallback to using the latest cache if no exact match is found
             - v1-dependencies-
 
+      - restore_cache:
+          keys:
+            - v1-native-dependencies-{{ checksum "build.gradle" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-native-dependencies-
+
       - run:
           name: Download dependencies
           command: |
@@ -129,8 +135,12 @@ jobs:
       - save_cache:
           paths:
             - ~/.gradle
-            - ~/.konan/dependencies
           key: v1-dependencies-{{ checksum "build.gradle" }}
+
+      - save_cache:
+          paths:
+            - ~/.konan/dependencies
+          key: v1-native-dependencies-{{ checksum "build.gradle" }}
 
       # run tests!
       - run: ./gradlew linuxTest
