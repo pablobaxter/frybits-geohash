@@ -45,9 +45,8 @@ jobs:
       # specify the version you desire here
       - image: circleci/openjdk:8-jdk
       - image: circleci/node:6-browsers
-
-    environment:
-      CHROME_BIN: "/usr/bin/google-chrome"
+        environment:
+          CHROME_BIN: "/usr/bin/google-chrome"
 
     working_directory: ~/repo
 
