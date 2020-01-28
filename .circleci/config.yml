@@ -103,7 +103,8 @@ jobs:
 workflows:
   version: 2
   Tests:
-    - JVM-Test
-    - Javascript-Browser-Test
-    - Javascript-Node-Test
+    jobs:
+      - JVM-Test
+      - Javascript-Browser-Test
+      - Javascript-Node-Test
 
