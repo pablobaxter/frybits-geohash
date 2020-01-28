@@ -32,7 +32,7 @@ jobs:
       - save_cache:
           paths:
             - ~/.gradle
-          key: v1-dependencies-{{ checksum "build.gradle" }}
+          key: v1-dependencies-{{ checksum "geohash/build.gradle" }}
 
       # run tests!
       - run: ./gradlew jvmTest
@@ -65,7 +65,7 @@ jobs:
       - save_cache:
           paths:
             - ~/.gradle
-          key: v1-dependencies-{{ checksum "build.gradle" }}
+          key: v1-dependencies-{{ checksum "geohash/build.gradle" }}
 
       # run tests!
       - run: ./gradlew jsBrowserTest
@@ -95,7 +95,7 @@ jobs:
       - save_cache:
           paths:
             - ~/.gradle
-          key: v1-dependencies-{{ checksum "build.gradle" }}
+          key: v1-dependencies-{{ checksum "geohash/build.gradle" }}
 
       # run tests!
       - run: ./gradlew jsNodeTest
@@ -121,8 +121,9 @@ jobs:
             - v1-dependencies-
 
       - restore_cache:
+          name:
           keys:
-            - v1-native-dependencies-{{ checksum "build.gradle" }}
+            - v1-native-dependencies-{{ checksum "geohash/build.gradle" }}
             # fallback to using the latest cache if no exact match is found
             - v1-native-dependencies-
 
@@ -135,12 +136,12 @@ jobs:
       - save_cache:
           paths:
             - ~/.gradle
-          key: v1-dependencies-{{ checksum "build.gradle" }}
+          key: v1-dependencies-{{ checksum "geohash/build.gradle" }}
 
       - save_cache:
           paths:
             - ~/.konan/dependencies
-          key: v1-native-dependencies-{{ checksum "build.gradle" }}
+          key: v1-native-dependencies-{{ checksum "geohash/build.gradle" }}
 
       # run tests!
       - run: ./gradlew linuxTest
