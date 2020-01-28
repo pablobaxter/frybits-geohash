@@ -60,8 +60,11 @@ jobs:
             # fallback to using the latest cache if no exact match is found
             - v1-dependencies-
 
-      - run: ./gradlew :geohash:dependencies
-      - run: ./gradlew :geohash:compileKotlinLinux
+      - run:
+          name: Download dependencies
+          command: |
+            ./gradlew :geohash:dependencies
+            ./gradlew :geohash:compileKotlinLinux
 
       - save_cache:
           paths:
