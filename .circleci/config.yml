@@ -32,7 +32,7 @@ jobs:
       - save_cache:
           paths:
             - ~/.gradle
-          key: v1-dependencies-{{ checksum "build.gradle" }}
+          key: v1-dependencies-{{ checksum "geohash/build.gradle" }}
 
       # run tests!
       - run: ./gradlew jvmTest
@@ -65,7 +65,7 @@ jobs:
       - save_cache:
           paths:
             - ~/.gradle
-          key: v1-dependencies-{{ checksum "build.gradle" }}
+          key: v1-dependencies-{{ checksum "geohash/build.gradle" }}
 
       # run tests!
       - run: ./gradlew jsBrowserTest
@@ -95,10 +95,56 @@ jobs:
       - save_cache:
           paths:
             - ~/.gradle
-          key: v1-dependencies-{{ checksum "build.gradle" }}
+          key: v1-dependencies-{{ checksum "geohash/build.gradle" }}
 
       # run tests!
       - run: ./gradlew jsNodeTest
+
+      - store_test_results:
+          path: geohash/build/test-results
+
+  Linux-Native-Test:
+    docker:
+      # specify the version you desire here
+      - image: circleci/openjdk:8-jdk
+
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "geohash/build.gradle" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
+
+      - restore_cache:
+          name:
+          keys:
+            - v1-native-dependencies-{{ checksum "geohash/build.gradle" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-native-dependencies-
+
+      - run:
+          name: Download dependencies
+          command: |
+            ./gradlew :geohash:dependencies
+            ./gradlew :geohash:compileKotlinLinux
+
+      - save_cache:
+          paths:
+            - ~/.gradle
+          key: v1-dependencies-{{ checksum "geohash/build.gradle" }}
+
+      - save_cache:
+          paths:
+            - ~/.konan/dependencies
+          key: v1-native-dependencies-{{ checksum "geohash/build.gradle" }}
+
+      # run tests!
+      - run: ./gradlew linuxTest
 
       - store_test_results:
           path: geohash/build/test-results
@@ -110,4 +156,5 @@ workflows:
       - JVM-Test
       - Javascript-Browser-Test
       - Javascript-Node-Test
+      - Linux-Native-Test
 
