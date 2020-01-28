@@ -8,7 +8,6 @@ import kotlin.random.Random
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
-import kotlin.test.fail
 
 /**
  * Frybits
@@ -95,10 +94,5 @@ class LatLonUtilsTest {
         val combinedBits3 = latLonBits(TEST_COMBINED_BITS_3)
 
         assertEquals(latLonBits3, combinedBits3)
-    }
-
-    @Test
-    fun failTest() {
-        fail("This is a failure")
     }
 }
