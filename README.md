@@ -1,4 +1,6 @@
 # Frybits-Geohash
+[![CircleCI](https://circleci.com/gh/pablobaxter/frybits-geohash.svg?style=svg)](https://circleci.com/gh/pablobaxter/frybits-geohash)
+
 A pure Kotlin/Multiplatform geohashing library.
 
 What is a [Geohash](https://en.wikipedia.org/wiki/Geohash)? TL;DR - It is an encoded representation of a geographic location as a string.
