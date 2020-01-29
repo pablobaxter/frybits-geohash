@@ -31,7 +31,9 @@ jobs:
             # fallback to using the latest cache if no exact match is found
             - v1-dependencies-
 
-      - run: ./gradlew :geohash:dependencies
+      - run:
+          name: Download Depencies
+          command: ./gradlew :geohash:dependencies
 
       - save_cache:
           paths:
@@ -39,7 +41,9 @@ jobs:
           key: v1-dependencies-{{ checksum "geohash/build.gradle" }}
 
       # run tests!
-      - run: ./gradlew jvmTest
+      - run:
+          name: Java Unit Tests
+          command: ./gradlew jvmTest
 
       - store_test_results:
           path: geohash/build/test-results
@@ -64,7 +68,9 @@ jobs:
             # fallback to using the latest cache if no exact match is found
             - v1-dependencies-
 
-      - run: ./gradlew :geohash:dependencies
+      - run:
+          name: Download Dependencies
+          command: ./gradlew :geohash:dependencies
 
       - save_cache:
           paths:
@@ -72,7 +78,9 @@ jobs:
           key: v1-dependencies-{{ checksum "geohash/build.gradle" }}
 
       # run tests!
-      - run: ./gradlew jsBrowserTest
+      - run:
+          name: Javascript Browserify Unit Tests
+          command: ./gradlew jsBrowserTest
 
       - store_test_results:
           path: geohash/build/test-results
@@ -94,7 +102,9 @@ jobs:
             # fallback to using the latest cache if no exact match is found
             - v1-dependencies-
 
-      - run: ./gradlew :geohash:dependencies
+      - run:
+          name: Download Dependencies
+          command: ./gradlew :geohash:dependencies
 
       - save_cache:
           paths:
@@ -102,7 +112,9 @@ jobs:
           key: v1-dependencies-{{ checksum "geohash/build.gradle" }}
 
       # run tests!
-      - run: ./gradlew jsNodeTest
+      - run:
+          name: Javascript Node Unit Tests
+          command: ./gradlew jsNodeTest
 
       - store_test_results:
           path: geohash/build/test-results
@@ -132,7 +144,7 @@ jobs:
             - v1-native-dependencies-
 
       - run:
-          name: Download dependencies
+          name: Download Dependencies
           command: |
             ./gradlew :geohash:dependencies
             ./gradlew :geohash:compileKotlinLinux
@@ -148,7 +160,9 @@ jobs:
           key: v1-native-dependencies-{{ checksum "geohash/build.gradle" }}
 
       # run tests!
-      - run: ./gradlew linuxTest
+      - run:
+          name: Linux Unit Tests
+          command: ./gradlew linuxTest
 
       - store_test_results:
           path: geohash/build/test-results
@@ -168,17 +182,18 @@ jobs:
             - v1-dependencies-
 
       - run:
-          name: Download dependencies
-          command: |
-            .\gradlew.bat :geohash:dependencies
+          name: Download Dependencies
+          command: gradlew.bat :geohash:dependencies
 
       - save_cache:
           paths:
-            - ~\.gradle
+            - C:\Users\circleci\.gradle
           key: v1-dependencies-{{ checksum "geohash\\build.gradle" }}
 
       # run tests!
-      - run: .\gradlew.bat windowsTest
+      - run:
+          name: Windows Unit Tests
+          command: gradlew.bat windowsTest
 
       - store_test_results:
           path: geohash\build\test-results
