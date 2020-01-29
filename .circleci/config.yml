@@ -1,4 +1,8 @@
-version: 2
+version: 2.1
+
+orbs:
+  win: circleci/windows@2.2.0
+
 jobs:
   JVM-Test:
     docker:
@@ -150,10 +154,8 @@ jobs:
           path: geohash/build/test-results
 
   Windows-Native-Test:
-    machine:
-      image: windows-default # Windows machine image
-
-    resource_class: windows.medium
+    executor:
+      name: win/default
 
     steps:
       - checkout
