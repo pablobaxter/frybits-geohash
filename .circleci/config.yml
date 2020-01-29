@@ -183,7 +183,7 @@ jobs:
 
       - run:
           name: Download Dependencies
-          command: gradlew.bat :geohash:dependencies
+          command: .\gradlew.bat :geohash:dependencies
 
       - save_cache:
           paths:
@@ -193,7 +193,7 @@ jobs:
       # run tests!
       - run:
           name: Windows Unit Tests
-          command: gradlew.bat windowsTest
+          command: .\gradlew.bat windowsTest
 
       - store_test_results:
           path: geohash\build\test-results
