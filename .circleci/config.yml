@@ -174,27 +174,28 @@ jobs:
     steps:
       - checkout
 
-# Cache downloading seems to hang the build process. Skipping this for Windows.
-#      # Download and cache dependencies
-#      - restore_cache:
-#          keys:
-#            - v1-dependencies-{{ checksum "geohash\\build.gradle" }}
-#            # fallback to using the latest cache if no exact match is found
-#            - v1-dependencies-
-#
-#      - run:
-#          name: Download Dependencies
-#          command: .\gradlew.bat :geohash:dependencies
-#
-#      - save_cache:
-#          paths:
-#            - C:\Users\circleci\.gradle
-#          key: v1-dependencies-{{ checksum "geohash\\build.gradle" }}
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "geohash\\build.gradle" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
+
+      - run:
+          name: Download Dependencies
+          command: .\gradlew.bat :geohash:dependencies
+          shell: bash.exe
+
+      - save_cache:
+          paths:
+            - C:\Users\circleci\.gradle
+          key: v1-dependencies-{{ checksum "geohash\\build.gradle" }}
 
       # run tests!
       - run:
           name: Windows Unit Tests
           command: .\gradlew.bat windowsTest
+          shell: bash.exe
 
       - store_test_results:
           path: geohash\build\test-results
