@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  win: circleci/windows@2.2.0
+  win: circleci/windows@2.4.0
 
 jobs:
   JVM-Test:
@@ -163,25 +163,25 @@ jobs:
       # Download and cache dependencies
       - restore_cache:
           keys:
-            - v1-dependencies-{{ checksum "geohash/build.gradle" }}
+            - v1-dependencies-{{ checksum "geohash\\build.gradle" }}
             # fallback to using the latest cache if no exact match is found
             - v1-dependencies-
 
       - run:
           name: Download dependencies
           command: |
-            ./gradlew :geohash:dependencies
+            .\gradlew.bat :geohash:dependencies
 
       - save_cache:
           paths:
-            - ~/.gradle
-          key: v1-dependencies-{{ checksum "geohash/build.gradle" }}
+            - ~\.gradle
+          key: v1-dependencies-{{ checksum "geohash\\build.gradle" }}
 
       # run tests!
-      - run: ./gradlew windowsTest
+      - run: .\gradlew.bat windowsTest
 
       - store_test_results:
-          path: geohash/build/test-results
+          path: geohash\build\test-results
 
 workflows:
   version: 2
