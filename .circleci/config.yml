@@ -26,19 +26,34 @@ jobs:
 
       # Download and cache dependencies
       - restore_cache:
+          name: Restoring Gradle cache
           keys:
             - v1-dependencies-jvm-{{ checksum "geohash/build.gradle" }}
             # fallback to using the latest cache if no exact match is found
             - v1-dependencies-jvm-
+
+      - restore_cache:
+          name: Restoring Native cache
+          keys:
+            - v1-native-dependencies-linux-{{ checksum "geohash/build.gradle" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-native-dependencies-linux-
 
       - run:
           name: Download Depencies
           command: ./gradlew :geohash:dependencies
 
       - save_cache:
+          name: Saving Gradle cache
           paths:
             - ~/.gradle
           key: v1-dependencies-jvm-{{ checksum "geohash/build.gradle" }}
+
+      - save_cache:
+          name: Saving Native cache
+          paths:
+            - ~/.konan/
+          key: v1-native-dependencies-linux-{{ checksum "geohash/build.gradle" }}
 
       # run tests!
       - run:
@@ -63,19 +78,34 @@ jobs:
 
       # Download and cache dependencies
       - restore_cache:
+          name: Restoring Gradle cache
           keys:
             - v1-dependencies-jsbrowser-{{ checksum "geohash/build.gradle" }}
             # fallback to using the latest cache if no exact match is found
             - v1-dependencies-jsbrowser-
+
+      - restore_cache:
+          name: Restoring Native cache
+          keys:
+            - v1-native-dependencies-linux-{{ checksum "geohash/build.gradle" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-native-dependencies-linux-
 
       - run:
           name: Download Dependencies
           command: ./gradlew :geohash:dependencies
 
       - save_cache:
+          name: Saving Gradle cache
           paths:
             - ~/.gradle
           key: v1-dependencies-jsbrowser-{{ checksum "geohash/build.gradle" }}
+
+      - save_cache:
+          name: Saving Native cache
+          paths:
+            - ~/.konan/
+          key: v1-native-dependencies-linux-{{ checksum "geohash/build.gradle" }}
 
       # run tests!
       - run:
@@ -97,19 +127,34 @@ jobs:
 
       # Download and cache dependencies
       - restore_cache:
+          name: Restoring Gradle cache
           keys:
             - v1-dependencies-jsnode-{{ checksum "geohash/build.gradle" }}
             # fallback to using the latest cache if no exact match is found
             - v1-dependencies-jsnode-
+
+      - restore_cache:
+          name: Restoring Native cache
+          keys:
+            - v1-native-dependencies-linux-{{ checksum "geohash/build.gradle" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-native-dependencies-linux-
 
       - run:
           name: Download Dependencies
           command: ./gradlew :geohash:dependencies
 
       - save_cache:
+          name: Saving Gradle cache
           paths:
             - ~/.gradle
           key: v1-dependencies-jsnode-{{ checksum "geohash/build.gradle" }}
+
+      - save_cache:
+          name: Saving Native cache
+          paths:
+            - ~/.konan/
+          key: v1-native-dependencies-linux-{{ checksum "geohash/build.gradle" }}
 
       # run tests!
       - run:
@@ -131,12 +176,14 @@ jobs:
 
       # Download and cache dependencies
       - restore_cache:
+          name: Restoring Gradle cache
           keys:
             - v1-dependencies-linux-{{ checksum "geohash/build.gradle" }}
             # fallback to using the latest cache if no exact match is found
             - v1-dependencies-linux-
 
       - restore_cache:
+          name: Restoring Native cache
           keys:
             - v1-native-dependencies-linux-{{ checksum "geohash/build.gradle" }}
             # fallback to using the latest cache if no exact match is found
@@ -149,13 +196,15 @@ jobs:
             ./gradlew :geohash:compileKotlinLinux
 
       - save_cache:
+          name: Saving Gradle cache
           paths:
             - ~/.gradle
           key: v1-dependencies-linux-{{ checksum "geohash/build.gradle" }}
 
       - save_cache:
+          name: Saving Native cache
           paths:
-            - ~/.konan/dependencies
+            - ~/.konan/
           key: v1-native-dependencies-linux-{{ checksum "geohash/build.gradle" }}
 
       # run tests!
@@ -175,12 +224,14 @@ jobs:
 
       # Download and cache dependencies
       - restore_cache:
+          name: Restoring Gradle cache
           keys:
             - v1-dependencies-windows-{{ checksum "geohash\\build.gradle" }}
             # fallback to using the latest cache if no exact match is found
             - v1-dependencies-windows-
 
       - restore_cache:
+          name: Restoring Native cache
           keys:
             - v1-native-dependencies-windows-{{ checksum "geohash\\build.gradle" }}
             # fallback to using the latest cache if no exact match is found
@@ -192,6 +243,7 @@ jobs:
           shell: bash.exe
 
       - save_cache:
+          name: Saving Gradle cache
           paths:
             - C:\Users\circleci\.gradle
           key: v1-dependencies-windows-{{ checksum "geohash\\build.gradle" }}
@@ -203,6 +255,7 @@ jobs:
           shell: bash.exe
 
       - save_cache:
+          name: Saving Native cache
           paths:
             - C:\Users\circleci\.konan\
           key: v1-native-dependencies-windows-{{ checksum "geohash\\build.gradle" }}
