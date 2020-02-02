@@ -137,7 +137,6 @@ jobs:
             - v1-dependencies-
 
       - restore_cache:
-          name:
           keys:
             - v1-native-dependencies-{{ checksum "geohash/build.gradle" }}
             # fallback to using the latest cache if no exact match is found
@@ -181,6 +180,12 @@ jobs:
             # fallback to using the latest cache if no exact match is found
             - v1-dependencies-
 
+      - restore_cache:
+          keys:
+            - v1-native-windows-dependencies-{{ checksum "geohash\\build.gradle" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-native-windows-dependencies-
+
       - run:
           name: Download Dependencies
           command: ./gradlew :geohash:dependencies
@@ -196,6 +201,11 @@ jobs:
           name: Windows Unit Tests
           command: ./gradlew windowsTest
           shell: bash.exe
+
+      - save_cache:
+          paths:
+            - C:\Users\circleci\.konan\
+          key: v1-native-windows-dependencies-{{ checksum "geohash\\build.gradle" }}
 
       - store_test_results:
           path: geohash\build\test-results
