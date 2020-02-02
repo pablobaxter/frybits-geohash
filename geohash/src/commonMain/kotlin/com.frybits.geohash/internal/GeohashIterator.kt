@@ -36,10 +36,11 @@ private class GeohashIterator(
     // This will always return the last curr hash if hasNext() is false, otherwise the hash would roll over and reiterate
     override fun next(): Geohash {
         val h = curr
+        // Sets the flag if it has reached endInclusive
+        reachedLast = curr == endInclusive
+
         if (!reachedLast) {
             if (reversed) curr-- else curr++ // Hold the current hash, and step the pointer
-            // Sets the flag if it has reached endInclusive
-            reachedLast = curr == endInclusive
         }
         return h
     }

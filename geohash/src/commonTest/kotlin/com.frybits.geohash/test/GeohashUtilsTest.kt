@@ -5,6 +5,8 @@ import com.frybits.geohash.LATITUDE_MIN
 import com.frybits.geohash.LONGITUDE_MAX
 import com.frybits.geohash.LONGITUDE_MIN
 import com.frybits.geohash.MAX_CHAR_PRECISION
+import com.frybits.geohash.internal.approxLatitudeError
+import com.frybits.geohash.internal.approxLongitudeError
 import com.frybits.geohash.internal.latLonBits
 import com.frybits.geohash.internal.toBoundingBox
 import com.frybits.geohash.internal.toBoundingBoxAndBits

@@ -20,9 +20,9 @@ class GeohashIteratorTest {
     fun iterator_a_simple_hash_range() {
         val iterator = geoHashIterator(Geohash(GEOHASH_CHARS.first().toString()), Geohash(GEOHASH_CHARS.last().toString()))
         assertTrue { iterator.hasNext() }
-        var count = 0
-        while (iterator.hasNext()) {
-            assertEquals(GEOHASH_CHARS[count++].toString(), iterator.next().geohash)
+        repeat(GEOHASH_CHARS.length) { count ->
+            assertTrue { iterator.hasNext() }
+            assertEquals(GEOHASH_CHARS[count].toString(), iterator.next().geohash)
         }
         assertFalse { iterator.hasNext() }
         assertEquals(GEOHASH_CHARS.last().toString(), iterator.next().geohash)
@@ -32,9 +32,10 @@ class GeohashIteratorTest {
     fun reversed_hash_iteration() {
         val iterator = geoHashIterator(Geohash(GEOHASH_CHARS.last().toString()), Geohash(GEOHASH_CHARS.first().toString()))
         assertTrue { iterator.hasNext() }
-        var count = GEOHASH_CHARS.length - 1
-        while (iterator.hasNext()) {
-            assertEquals(GEOHASH_CHARS[count--].toString(), iterator.next().geohash)
+        repeat(GEOHASH_CHARS.length) { i ->
+            val count = GEOHASH_CHARS.length - i - 1
+            assertTrue { iterator.hasNext() }
+            assertEquals(GEOHASH_CHARS[count].toString(), iterator.next().geohash)
         }
         assertFalse { iterator.hasNext() }
         assertEquals(GEOHASH_CHARS.first().toString(), iterator.next().geohash)

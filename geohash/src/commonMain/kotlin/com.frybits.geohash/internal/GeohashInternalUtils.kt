@@ -13,6 +13,7 @@ import com.frybits.geohash.MAX_BIT_PRECISION
 import com.frybits.geohash.MAX_CHAR_PRECISION
 import kotlin.jvm.JvmName
 import kotlin.jvm.JvmSynthetic
+import kotlin.math.pow
 
 /**
  * Frybits
@@ -192,4 +193,50 @@ internal fun toBoundingBoxAndBits(geohashString: String): Pair<BoundingBox, LatL
     }
     return BoundingBox(latRange[0], lonRange[0], latRange[1], lonRange[1]) to
             latLonBits(latBits, lonBits, geohashString.length)
+}
+
+// This gives approximate lat/lon error given the precision
+@JvmSynthetic
+internal fun approxLatitudeError(charPrecision: Int) = 90.0 / 2.0.pow((charPrecision * BITS_PER_CHAR) / 2)
+
+@JvmSynthetic
+internal fun approxLongitudeError(charPrecision: Int): Double = 180.0 / 2.0.pow(((charPrecision * BITS_PER_CHAR) + 1) / 2)
+
+// Credit to kungfoo's geohash-java library (https://github.com/kungfoo/geohash-java) for these 4 functions
+// From [GeoHashSizeTable]
+@JvmSynthetic
+internal fun maxLatSizeAt(charPrecision: Int): Double = 180.0 / 2.0.pow((charPrecision * BITS_PER_CHAR) / 2)
+
+// From [GeoHashSizeTable]
+@JvmSynthetic
+internal fun maxLonSizeAt(charPrecision: Int): Double = 360.0 / 2.0.pow(((charPrecision * BITS_PER_CHAR) + 1) / 2)
+
+// From [BoundingBox]
+@JvmSynthetic
+internal fun BoundingBox.latSize(): Double = northEastPoint.latitude - southEastPoint.latitude
+
+// From [BoundingBox]
+@JvmSynthetic
+internal fun BoundingBox.lonSize(): Double {
+    if (northEastPoint.longitude == LONGITUDE_MAX || northWestPoint.longitude == LONGITUDE_MIN) return 360.0
+    val delta = northEastPoint.longitude - northWestPoint.longitude
+    return if (delta < 0) delta + 360.0 else delta
+}
+
+@JvmSynthetic
+internal fun BoundingBox.maxCharsToCover(): Int {
+    val latDelta = latSize()
+    val lonDelta = lonSize()
+    repeat(MAX_CHAR_PRECISION) { count ->
+        if (maxLatSizeAt(MAX_CHAR_PRECISION - count) >= latDelta && maxLonSizeAt(MAX_CHAR_PRECISION - count) >= lonDelta) {
+            return MAX_CHAR_PRECISION - count
+        }
+    }
+    return 0
+}
+
+@JvmSynthetic
+internal fun BoundingBox.encompassesCompletely(other: BoundingBox): Boolean {
+    return contains(other.northWestPoint) && contains(other.northEastPoint)
+            && contains(other.southEastPoint) && contains(other.southWestPoint)
 }

@@ -11,6 +11,8 @@ import com.frybits.geohash.LONGITUDE_MIN
 import com.frybits.geohash.children
 import com.frybits.geohash.dec
 import com.frybits.geohash.inc
+import com.frybits.geohash.internal.approxLatitudeError
+import com.frybits.geohash.internal.approxLongitudeError
 import com.frybits.geohash.minus
 import com.frybits.geohash.neighborAt
 import com.frybits.geohash.parent
@@ -200,7 +202,9 @@ class GeohashTest {
             "9u5tc2req",
             centerHash
         )
-        Geohash(centerHash).surroundingGeohashes().forEachIndexed { i, h ->
+        val testHashes = Geohash(centerHash).surroundingGeohashes()
+        assertEquals(surroundingHashes.size, testHashes.size)
+        testHashes.forEachIndexed { i, h ->
             assertEquals(surroundingHashes[i], h.geohash)
         }
     }
@@ -208,7 +212,9 @@ class GeohashTest {
     @Test
     fun neighbors_start_at_North_and_iterate_clockwise() {
         val centerHash = Geohash("9u5tC2rep")
-        centerHash.surroundingGeohashes(includeSelf = false).forEachIndexed { i, h ->
+        val testHashes = centerHash.surroundingGeohashes(includeSelf = false)
+        assertEquals(8, testHashes.size)
+        testHashes.forEachIndexed { i, h ->
             when (i) {
                 0 -> assertEquals(centerHash.neighborAt(Direction.NORTH), h)
                 1 -> assertEquals(centerHash.neighborAt(Direction.NORTH_EAST), h)
@@ -237,7 +243,9 @@ class GeohashTest {
             "xupvzc",
             centerHash
         )
-        Geohash(centerHash).surroundingGeohashes().forEachIndexed { i, h ->
+        val testHashes = Geohash(centerHash).surroundingGeohashes()
+        assertEquals(surroundingHashes.size, testHashes.size)
+        testHashes.forEachIndexed { i, h ->
             assertEquals(surroundingHashes[i], h.geohash)
         }
     }
@@ -256,7 +264,9 @@ class GeohashTest {
             "pbpbpbpbpbn",
             centerHash
         )
-        Geohash(centerHash).surroundingGeohashes().forEachIndexed { i, h ->
+        val testHashes = Geohash(centerHash).surroundingGeohashes()
+        assertEquals(surroundingHashes.size, testHashes.size)
+        testHashes.forEachIndexed { i, h ->
             assertEquals(surroundingHashes[i], h.geohash)
         }
     }
@@ -266,7 +276,7 @@ class GeohashTest {
     @Test
     fun incrementing_geohashes() {
         var geohash = Geohash("0")
-        repeat(32) {
+        repeat(GEOHASH_CHARS.length) {
             // Let's iterate through all hashes
             assertEquals(GEOHASH_CHARS[it].toString(), geohash++.geohash)
         }
@@ -275,7 +285,7 @@ class GeohashTest {
     @Test
     fun decrementing_geohashes() {
         var geohash = Geohash("Z")
-        repeat(32) {
+        repeat(GEOHASH_CHARS.length) {
             // Let's iterate through all hashes
             assertEquals(GEOHASH_CHARS[GEOHASH_CHARS.length - it - 1].toString(), geohash--.geohash)
         }
@@ -418,7 +428,9 @@ class GeohashTest {
     fun geohash_children_check() {
         repeat(REPEAT_TEST_COUNT) {
             val testHash = Random.geoHash(Random.precision(11))
-            testHash.children().forEachIndexed { i, g ->
+            val children = testHash.children()
+            assertEquals(GEOHASH_CHARS.length, children.size)
+            children.forEachIndexed { i, g ->
                 assertEquals(testHash.geohash + GEOHASH_CHARS[i], g.geohash, "Test hash: ${testHash.geohash}")
             }
         }
