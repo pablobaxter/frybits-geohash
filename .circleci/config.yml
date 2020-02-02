@@ -183,7 +183,7 @@ jobs:
 
       - run:
           name: Download Dependencies
-          command: .\gradlew.bat :geohash:dependencies
+          command: .\gradlew :geohash:dependencies
           shell: bash.exe
 
       - save_cache:
@@ -194,7 +194,7 @@ jobs:
       # run tests!
       - run:
           name: Windows Unit Tests
-          command: .\gradlew.bat windowsTest
+          command: .\gradlew windowsTest
           shell: bash.exe
 
       - store_test_results:
