@@ -208,16 +208,16 @@ jobs:
       - restore_cache:
           name: Restoring Gradle cache
           keys:
-            - v3-dependencies-windows-{{ checksum "geohash\\build.gradle" }}
+            - v4-dependencies-windows-{{ checksum "geohash/build.gradle" }}
             # fallback to using the latest cache if no exact match is found
-            - v3-dependencies-windows-
+            - v4-dependencies-windows-
 
       - restore_cache:
           name: Restoring Native cache
           keys:
-            - v3-native-dependencies-windows-{{ checksum "geohash\\build.gradle" }}
+            - v4-native-dependencies-windows-{{ checksum "geohash/build.gradle" }}
             # fallback to using the latest cache if no exact match is found
-            - v3-native-dependencies-windows-
+            - v4-native-dependencies-windows-
 
       - run:
           name: Download Dependencies
@@ -227,8 +227,8 @@ jobs:
       - save_cache:
           name: Saving Gradle cache
           paths:
-            - C:\Users\circleci\.gradle\
-          key: v3-dependencies-windows-{{ checksum "geohash\\build.gradle" }}
+            - ~/.gradle
+          key: v4-dependencies-windows-{{ checksum "geohash/build.gradle" }}
 
       # run tests!
       - run:
@@ -239,11 +239,11 @@ jobs:
       - save_cache:
           name: Saving Native cache
           paths:
-            - C:\Users\circleci\.konan\
-          key: v3-native-dependencies-windows-{{ checksum "geohash\\build.gradle" }}
+            - ~/.konan
+          key: v4-native-dependencies-windows-{{ checksum "geohash/build.gradle" }}
 
       - store_test_results:
-          path: geohash\build\test-results
+          path: geohash/build/test-results
 
 workflows:
   version: 2
