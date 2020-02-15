@@ -5,6 +5,28 @@ orbs:
 
 jobs:
 
+  Android-Test:
+    docker:
+      - image: circleci/android:api-29
+
+    environment:
+      # Configure the JVM and Gradle to avoid OOM errors
+      _JAVA_OPTIONS: "-Xmx3g"
+      GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2"
+
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+
+      # run tests!
+      - run:
+          name: Java Unit Tests
+          command: ./gradlew :android:testDebugUnitTest
+
+      - store_test_results:
+          path: android/build/test-results
+
   JVM-Test:
     docker:
       # specify the version you desire here
@@ -127,6 +149,7 @@ workflows:
   version: 2
   Tests:
     jobs:
+      - Android-Test
       - JVM-Test
       - Javascript-Browser-Test
       - Javascript-Node-Test
