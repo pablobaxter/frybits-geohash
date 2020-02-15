@@ -22,7 +22,7 @@ jobs:
       # run tests!
       - run:
           name: Java Unit Tests
-          command: ./gradlew :android:test
+          command: ./gradlew :android:testDebugUnitTest
 
       - store_test_results:
           path: android/build/test-results
