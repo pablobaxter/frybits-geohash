@@ -90,6 +90,10 @@ jobs:
     steps:
       - checkout
 
+      - run:
+          name: Fix for linux builds
+          command: apt-get update && apt-get install libncurses5 -y
+
       # run tests!
       - run:
           name: Linux Unit Tests
