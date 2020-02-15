@@ -28,6 +28,7 @@ kotlin {
     macosX64("macos")
     linuxX64("linux")
     mingwX64("windows")
+    // TODO iOS setup
 
     sourceSets {
         commonMain {
