@@ -15,33 +15,33 @@ jobs:
       # documented at https://circleci.com/docs/2.0/circleci-images/
       # - image: circleci/postgres:9.4
 
-      working_directory: ~/repo
+    working_directory: ~/repo
 
-      environment:
-        # Customize the JVM maximum heap limit
-        JVM_OPTS: -Xmx3200m
-        TERM: dumb
+    environment:
+      # Customize the JVM maximum heap limit
+      JVM_OPTS: -Xmx3200m
+      TERM: dumb
 
-      steps:
-        - checkout
+    steps:
+      - checkout
 
-        # Download and cache dependencies
-        - restore_cache:
-            name: Restoring Gradle cache
-            keys:
-              - v4-dependencies-{{ checksum "geohash/build.gradle" }}
-              # fallback to using the latest cache if no exact match is found
-              - v4-dependencies-
+      # Download and cache dependencies
+      - restore_cache:
+          name: Restoring Gradle cache
+          keys:
+            - v4-dependencies-{{ checksum "geohash/build.gradle" }}
+            # fallback to using the latest cache if no exact match is found
+            - v4-dependencies-
 
-        - run:
-            name: Download Depencies
-            command: ./gradlew :geohash:dependencies
+      - run:
+          name: Download Depencies
+          command: ./gradlew :geohash:dependencies
 
-        - save_cache:
-            name: Saving Gradle cache
-            paths:
-              - ~/.gradle
-            key: v4-dependencies-{{ checksum "geohash/build.gradle" }}
+      - save_cache:
+          name: Saving Gradle cache
+          paths:
+            - ~/.gradle
+          key: v4-dependencies-{{ checksum "geohash/build.gradle" }}
 
   JVM-Test:
     docker:
