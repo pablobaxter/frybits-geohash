@@ -5,6 +5,23 @@ orbs:
 
 jobs:
 
+  MacOs-Test:
+    macos:
+      xcode: 11.3.0
+
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+
+      # run tests!
+      - run:
+          name: Java Unit Tests
+          command: ./gradlew macosTest
+
+      - store_test_results:
+          path: geohash/build/test-results
+
   Android-Test:
     docker:
       - image: circleci/android:api-29
@@ -149,6 +166,7 @@ workflows:
   version: 2
   Tests:
     jobs:
+      - MacOs-Test
       - Android-Test
       - JVM-Test
       - Javascript-Browser-Test
