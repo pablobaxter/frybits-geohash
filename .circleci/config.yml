@@ -4,6 +4,45 @@ orbs:
   win: circleci/windows@2.4.0
 
 jobs:
+
+  Cache-Dependencies:
+    docker:
+      # specify the version you desire here
+      - image: circleci/openjdk:8-jdk
+
+      # Specify service dependencies here if necessary
+      # CircleCI maintains a library of pre-built images
+      # documented at https://circleci.com/docs/2.0/circleci-images/
+      # - image: circleci/postgres:9.4
+
+      working_directory: ~/repo
+
+      environment:
+        # Customize the JVM maximum heap limit
+        JVM_OPTS: -Xmx3200m
+        TERM: dumb
+
+      steps:
+        - checkout
+
+        # Download and cache dependencies
+        - restore_cache:
+            name: Restoring Gradle cache
+            keys:
+              - v4-dependencies-{{ checksum "geohash/build.gradle" }}
+              # fallback to using the latest cache if no exact match is found
+              - v4-dependencies-
+
+        - run:
+            name: Download Depencies
+            command: ./gradlew :geohash:dependencies
+
+        - save_cache:
+            name: Saving Gradle cache
+            paths:
+              - ~/.gradle
+            key: v4-dependencies-{{ checksum "geohash/build.gradle" }}
+
   JVM-Test:
     docker:
       # specify the version you desire here
@@ -28,26 +67,9 @@ jobs:
       - restore_cache:
           name: Restoring Gradle cache
           keys:
-            - v4-dependencies-jvm-{{ checksum "geohash/build.gradle" }}
+            - v4-dependencies-{{ checksum "geohash/build.gradle" }}
             # fallback to using the latest cache if no exact match is found
-            - v4-dependencies-jvm-
-
-      - restore_cache:
-          name: Restoring Native cache
-          keys:
-            - v4-native-dependencies-linux-{{ checksum "geohash/build.gradle" }}
-            # fallback to using the latest cache if no exact match is found
-            - v4-native-dependencies-linux-
-
-      - run:
-          name: Download Depencies
-          command: ./gradlew :geohash:dependencies
-
-      - save_cache:
-          name: Saving Gradle cache
-          paths:
-            - ~/.gradle
-          key: v4-dependencies-jvm-{{ checksum "geohash/build.gradle" }}
+            - v4-dependencies-
 
       # run tests!
       - run:
@@ -74,26 +96,9 @@ jobs:
       - restore_cache:
           name: Restoring Gradle cache
           keys:
-            - v4-dependencies-jsbrowser-{{ checksum "geohash/build.gradle" }}
+            - v4-dependencies-{{ checksum "geohash/build.gradle" }}
             # fallback to using the latest cache if no exact match is found
-            - v4-dependencies-jsbrowser-
-
-      - restore_cache:
-          name: Restoring Native cache
-          keys:
-            - v4-native-dependencies-linux-{{ checksum "geohash/build.gradle" }}
-            # fallback to using the latest cache if no exact match is found
-            - v4-native-dependencies-linux-
-
-      - run:
-          name: Download Dependencies
-          command: ./gradlew :geohash:dependencies
-
-      - save_cache:
-          name: Saving Gradle cache
-          paths:
-            - ~/.gradle
-          key: v4-dependencies-jsbrowser-{{ checksum "geohash/build.gradle" }}
+            - v4-dependencies-
 
       # run tests!
       - run:
@@ -117,26 +122,9 @@ jobs:
       - restore_cache:
           name: Restoring Gradle cache
           keys:
-            - v4-dependencies-jsnode-{{ checksum "geohash/build.gradle" }}
+            - v4-dependencies-{{ checksum "geohash/build.gradle" }}
             # fallback to using the latest cache if no exact match is found
-            - v4-dependencies-jsnode-
-
-      - restore_cache:
-          name: Restoring Native cache
-          keys:
-            - v4-native-dependencies-linux-{{ checksum "geohash/build.gradle" }}
-            # fallback to using the latest cache if no exact match is found
-            - v4-native-dependencies-linux-
-
-      - run:
-          name: Download Dependencies
-          command: ./gradlew :geohash:dependencies
-
-      - save_cache:
-          name: Saving Gradle cache
-          paths:
-            - ~/.gradle
-          key: v4-dependencies-jsnode-{{ checksum "geohash/build.gradle" }}
+            - v4-dependencies-
 
       # run tests!
       - run:
@@ -160,34 +148,9 @@ jobs:
       - restore_cache:
           name: Restoring Gradle cache
           keys:
-            - v4-dependencies-linux-{{ checksum "geohash/build.gradle" }}
+            - v4-dependencies-{{ checksum "geohash/build.gradle" }}
             # fallback to using the latest cache if no exact match is found
-            - v4-dependencies-linux-
-
-      - restore_cache:
-          name: Restoring Native cache
-          keys:
-            - v4-native-dependencies-linux-{{ checksum "geohash/build.gradle" }}
-            # fallback to using the latest cache if no exact match is found
-            - v4-native-dependencies-linux-
-
-      - run:
-          name: Download Dependencies
-          command: |
-            ./gradlew :geohash:dependencies
-            ./gradlew :geohash:compileKotlinLinux
-
-      - save_cache:
-          name: Saving Gradle cache
-          paths:
-            - ~/.gradle
-          key: v4-dependencies-linux-{{ checksum "geohash/build.gradle" }}
-
-      - save_cache:
-          name: Saving Native cache
-          paths:
-            - ~/.konan
-          key: v4-native-dependencies-linux-{{ checksum "geohash/build.gradle" }}
+            - v4-dependencies-
 
       # run tests!
       - run:
@@ -208,39 +171,15 @@ jobs:
       - restore_cache:
           name: Restoring Gradle cache
           keys:
-            - v4-dependencies-windows-{{ checksum "geohash/build.gradle" }}
+            - v4-dependencies-{{ checksum "geohash/build.gradle" }}
             # fallback to using the latest cache if no exact match is found
-            - v4-dependencies-windows-
-
-      - restore_cache:
-          name: Restoring Native cache
-          keys:
-            - v4-native-dependencies-windows-{{ checksum "geohash/build.gradle" }}
-            # fallback to using the latest cache if no exact match is found
-            - v4-native-dependencies-windows-
-
-      - run:
-          name: Download Dependencies
-          command: ./gradlew :geohash:dependencies
-          shell: bash.exe
-
-      - save_cache:
-          name: Saving Gradle cache
-          paths:
-            - ~/.gradle
-          key: v4-dependencies-windows-{{ checksum "geohash/build.gradle" }}
+            - v4-dependencies-
 
       # run tests!
       - run:
           name: Windows Unit Tests
           command: ./gradlew windowsTest
           shell: bash.exe
-
-      - save_cache:
-          name: Saving Native cache
-          paths:
-            - ~/.konan
-          key: v4-native-dependencies-windows-{{ checksum "geohash/build.gradle" }}
 
       - store_test_results:
           path: geohash/build/test-results
@@ -249,9 +188,20 @@ workflows:
   version: 2
   Tests:
     jobs:
-      - JVM-Test
-      - Javascript-Browser-Test
-      - Javascript-Node-Test
-      - Linux-Native-Test
-      - Windows-Native-Test
+      - Cache-Dependencies
+      - JVM-Test:
+          requires:
+            - Cache-Dependencies
+      - Javascript-Browser-Test:
+          requires:
+            - Cache-Dependencies
+      - Javascript-Node-Test:
+          requires:
+            - Cache-Dependencies
+      - Linux-Native-Test:
+          requires:
+            - Cache-Dependencies
+      - Windows-Native-Test:
+          requires:
+            - Cache-Dependencies
 
