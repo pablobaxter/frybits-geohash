@@ -10,17 +10,12 @@ jobs:
       # specify the version you desire here
       - image: circleci/openjdk:8-jdk
 
-      # Specify service dependencies here if necessary
-      # CircleCI maintains a library of pre-built images
-      # documented at https://circleci.com/docs/2.0/circleci-images/
-      # - image: circleci/postgres:9.4
+    environment:
+      # Configure the JVM and Gradle to avoid OOM errors
+      _JAVA_OPTIONS: "-Xmx3g"
+      GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2"
 
     working_directory: ~/repo
-
-    environment:
-      # Customize the JVM maximum heap limit
-      JVM_OPTS: -Xmx3200m
-      TERM: dumb
 
     steps:
       - checkout
@@ -29,9 +24,9 @@ jobs:
       - restore_cache:
           name: Restoring Gradle cache
           keys:
-            - v4-dependencies-{{ checksum "geohash/build.gradle" }}
+            - v5-dependencies-{{ checksum "geohash/build.gradle" }}
             # fallback to using the latest cache if no exact match is found
-            - v4-dependencies-
+            - v5-dependencies-
 
       - run:
           name: Download Depencies
@@ -41,24 +36,19 @@ jobs:
           name: Saving Gradle cache
           paths:
             - ~/.gradle
-          key: v4-dependencies-{{ checksum "geohash/build.gradle" }}
+          key: v5-dependencies-{{ checksum "geohash/build.gradle" }}
 
   JVM-Test:
     docker:
       # specify the version you desire here
       - image: circleci/openjdk:8-jdk
 
-      # Specify service dependencies here if necessary
-      # CircleCI maintains a library of pre-built images
-      # documented at https://circleci.com/docs/2.0/circleci-images/
-      # - image: circleci/postgres:9.4
+    environment:
+      # Configure the JVM and Gradle to avoid OOM errors
+      _JAVA_OPTIONS: "-Xmx3g"
+      GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2"
 
     working_directory: ~/repo
-
-    environment:
-      # Customize the JVM maximum heap limit
-      JVM_OPTS: -Xmx3200m
-      TERM: dumb
 
     steps:
       - checkout
@@ -67,9 +57,9 @@ jobs:
       - restore_cache:
           name: Restoring Gradle cache
           keys:
-            - v4-dependencies-{{ checksum "geohash/build.gradle" }}
+            - v5-dependencies-{{ checksum "geohash/build.gradle" }}
             # fallback to using the latest cache if no exact match is found
-            - v4-dependencies-
+            - v5-dependencies-
 
       # run tests!
       - run:
@@ -85,6 +75,9 @@ jobs:
       - image: circleci/openjdk:8-jdk-node-browsers
 
     environment:
+      # Configure the JVM and Gradle to avoid OOM errors
+      _JAVA_OPTIONS: "-Xmx3g"
+      GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2"
       CHROME_BIN: "/usr/bin/google-chrome"
 
     working_directory: ~/repo
@@ -96,9 +89,9 @@ jobs:
       - restore_cache:
           name: Restoring Gradle cache
           keys:
-            - v4-dependencies-{{ checksum "geohash/build.gradle" }}
+            - v5-dependencies-{{ checksum "geohash/build.gradle" }}
             # fallback to using the latest cache if no exact match is found
-            - v4-dependencies-
+            - v5-dependencies-
 
       # run tests!
       - run:
@@ -113,6 +106,11 @@ jobs:
       # specify the version you desire here
       - image: circleci/openjdk:8-jdk-node
 
+    environment:
+      # Configure the JVM and Gradle to avoid OOM errors
+      _JAVA_OPTIONS: "-Xmx3g"
+      GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2"
+
     working_directory: ~/repo
 
     steps:
@@ -122,9 +120,9 @@ jobs:
       - restore_cache:
           name: Restoring Gradle cache
           keys:
-            - v4-dependencies-{{ checksum "geohash/build.gradle" }}
+            - v5-dependencies-{{ checksum "geohash/build.gradle" }}
             # fallback to using the latest cache if no exact match is found
-            - v4-dependencies-
+            - v5-dependencies-
 
       # run tests!
       - run:
@@ -139,6 +137,11 @@ jobs:
       # specify the version you desire here
       - image: circleci/openjdk:8-jdk
 
+    environment:
+      # Configure the JVM and Gradle to avoid OOM errors
+      _JAVA_OPTIONS: "-Xmx3g"
+      GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2"
+
     working_directory: ~/repo
 
     steps:
@@ -148,9 +151,9 @@ jobs:
       - restore_cache:
           name: Restoring Gradle cache
           keys:
-            - v4-dependencies-{{ checksum "geohash/build.gradle" }}
+            - v5-dependencies-{{ checksum "geohash/build.gradle" }}
             # fallback to using the latest cache if no exact match is found
-            - v4-dependencies-
+            - v5-dependencies-
 
       # run tests!
       - run:
@@ -164,6 +167,11 @@ jobs:
     executor:
       name: win/default
 
+    environment:
+      # Configure the JVM and Gradle to avoid OOM errors
+      _JAVA_OPTIONS: "-Xmx3g"
+      GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2"
+
     steps:
       - checkout
 
@@ -171,9 +179,9 @@ jobs:
       - restore_cache:
           name: Restoring Gradle cache
           keys:
-            - v4-dependencies-{{ checksum "geohash/build.gradle" }}
+            - v5-dependencies-{{ checksum "geohash/build.gradle" }}
             # fallback to using the latest cache if no exact match is found
-            - v4-dependencies-
+            - v5-dependencies-
 
       # run tests!
       - run:
