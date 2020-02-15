@@ -5,39 +5,6 @@ orbs:
 
 jobs:
 
-  Cache-Dependencies:
-    docker:
-      # specify the version you desire here
-      - image: circleci/openjdk:8-jdk
-
-    environment:
-      # Configure the JVM and Gradle to avoid OOM errors
-      _JAVA_OPTIONS: "-Xmx3g"
-      GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2"
-
-    working_directory: ~/repo
-
-    steps:
-      - checkout
-
-      # Download and cache dependencies
-      - restore_cache:
-          name: Restoring Gradle cache
-          keys:
-            - v5-dependencies-{{ checksum "geohash/build.gradle" }}
-            # fallback to using the latest cache if no exact match is found
-            - v5-dependencies-
-
-      - run:
-          name: Download Depencies
-          command: ./gradlew :geohash:dependencies
-
-      - save_cache:
-          name: Saving Gradle cache
-          paths:
-            - ~/.gradle
-          key: v5-dependencies-{{ checksum "geohash/build.gradle" }}
-
   JVM-Test:
     docker:
       # specify the version you desire here
@@ -52,14 +19,6 @@ jobs:
 
     steps:
       - checkout
-
-      # Download and cache dependencies
-      - restore_cache:
-          name: Restoring Gradle cache
-          keys:
-            - v5-dependencies-{{ checksum "geohash/build.gradle" }}
-            # fallback to using the latest cache if no exact match is found
-            - v5-dependencies-
 
       # run tests!
       - run:
@@ -85,14 +44,6 @@ jobs:
     steps:
       - checkout
 
-      # Download and cache dependencies
-      - restore_cache:
-          name: Restoring Gradle cache
-          keys:
-            - v5-dependencies-{{ checksum "geohash/build.gradle" }}
-            # fallback to using the latest cache if no exact match is found
-            - v5-dependencies-
-
       # run tests!
       - run:
           name: Javascript Browserify Unit Tests
@@ -115,14 +66,6 @@ jobs:
 
     steps:
       - checkout
-
-      # Download and cache dependencies
-      - restore_cache:
-          name: Restoring Gradle cache
-          keys:
-            - v5-dependencies-{{ checksum "geohash/build.gradle" }}
-            # fallback to using the latest cache if no exact match is found
-            - v5-dependencies-
 
       # run tests!
       - run:
@@ -147,14 +90,6 @@ jobs:
     steps:
       - checkout
 
-      # Download and cache dependencies
-      - restore_cache:
-          name: Restoring Gradle cache
-          keys:
-            - v5-dependencies-{{ checksum "geohash/build.gradle" }}
-            # fallback to using the latest cache if no exact match is found
-            - v5-dependencies-
-
       # run tests!
       - run:
           name: Linux Unit Tests
@@ -175,14 +110,6 @@ jobs:
     steps:
       - checkout
 
-      # Download and cache dependencies
-      - restore_cache:
-          name: Restoring Gradle cache
-          keys:
-            - v5-dependencies-{{ checksum "geohash/build.gradle" }}
-            # fallback to using the latest cache if no exact match is found
-            - v5-dependencies-
-
       # run tests!
       - run:
           name: Windows Unit Tests
@@ -196,20 +123,9 @@ workflows:
   version: 2
   Tests:
     jobs:
-      - Cache-Dependencies
-      - JVM-Test:
-          requires:
-            - Cache-Dependencies
-      - Javascript-Browser-Test:
-          requires:
-            - Cache-Dependencies
-      - Javascript-Node-Test:
-          requires:
-            - Cache-Dependencies
-      - Linux-Native-Test:
-          requires:
-            - Cache-Dependencies
-      - Windows-Native-Test:
-          requires:
-            - Cache-Dependencies
+      - JVM-Test
+      - Javascript-Browser-Test
+      - Javascript-Node-Test
+      - Linux-Native-Test
+      - Windows-Native-Test
 
