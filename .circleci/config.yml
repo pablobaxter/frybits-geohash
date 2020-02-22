@@ -1,41 +1,68 @@
-version: 2
+version: 2.1
+
+orbs:
+  win: circleci/windows@2.4.0
+
 jobs:
+
+  MacOs-Test:
+    macos:
+      xcode: 11.3.0
+
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+
+      # run tests!
+      - run:
+          name: Java Unit Tests
+          command: ./gradlew macosTest
+
+      - store_test_results:
+          path: geohash/build/test-results
+
+  Android-Test:
+    docker:
+      - image: circleci/android:api-29
+
+    environment:
+      # Configure the JVM and Gradle to avoid OOM errors
+      _JAVA_OPTIONS: "-Xmx3g"
+      GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2"
+
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+
+      # run tests!
+      - run:
+          name: Java Unit Tests
+          command: ./gradlew :android:testDebugUnitTest
+
+      - store_test_results:
+          path: android/build/test-results
+
   JVM-Test:
     docker:
       # specify the version you desire here
       - image: circleci/openjdk:8-jdk
 
-      # Specify service dependencies here if necessary
-      # CircleCI maintains a library of pre-built images
-      # documented at https://circleci.com/docs/2.0/circleci-images/
-      # - image: circleci/postgres:9.4
+    environment:
+      # Configure the JVM and Gradle to avoid OOM errors
+      _JAVA_OPTIONS: "-Xmx3g"
+      GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2"
 
     working_directory: ~/repo
-
-    environment:
-      # Customize the JVM maximum heap limit
-      JVM_OPTS: -Xmx3200m
-      TERM: dumb
 
     steps:
       - checkout
 
-      # Download and cache dependencies
-      - restore_cache:
-          keys:
-            - v1-dependencies-{{ checksum "geohash/build.gradle" }}
-            # fallback to using the latest cache if no exact match is found
-            - v1-dependencies-
-
-      - run: ./gradlew :geohash:dependencies
-
-      - save_cache:
-          paths:
-            - ~/.gradle
-          key: v1-dependencies-{{ checksum "geohash/build.gradle" }}
-
       # run tests!
-      - run: ./gradlew jvmTest
+      - run:
+          name: Java Unit Tests
+          command: ./gradlew jvmTest
 
       - store_test_results:
           path: geohash/build/test-results
@@ -46,6 +73,9 @@ jobs:
       - image: circleci/openjdk:8-jdk-node-browsers
 
     environment:
+      # Configure the JVM and Gradle to avoid OOM errors
+      _JAVA_OPTIONS: "-Xmx3g"
+      GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2"
       CHROME_BIN: "/usr/bin/google-chrome"
 
     working_directory: ~/repo
@@ -53,22 +83,10 @@ jobs:
     steps:
       - checkout
 
-      # Download and cache dependencies
-      - restore_cache:
-          keys:
-            - v1-dependencies-{{ checksum "geohash/build.gradle" }}
-            # fallback to using the latest cache if no exact match is found
-            - v1-dependencies-
-
-      - run: ./gradlew :geohash:dependencies
-
-      - save_cache:
-          paths:
-            - ~/.gradle
-          key: v1-dependencies-{{ checksum "geohash/build.gradle" }}
-
       # run tests!
-      - run: ./gradlew jsBrowserTest
+      - run:
+          name: Javascript Browserify Unit Tests
+          command: ./gradlew jsBrowserTest
 
       - store_test_results:
           path: geohash/build/test-results
@@ -78,27 +96,20 @@ jobs:
       # specify the version you desire here
       - image: circleci/openjdk:8-jdk-node
 
+    environment:
+      # Configure the JVM and Gradle to avoid OOM errors
+      _JAVA_OPTIONS: "-Xmx3g"
+      GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2"
+
     working_directory: ~/repo
 
     steps:
       - checkout
 
-      # Download and cache dependencies
-      - restore_cache:
-          keys:
-            - v1-dependencies-{{ checksum "geohash/build.gradle" }}
-            # fallback to using the latest cache if no exact match is found
-            - v1-dependencies-
-
-      - run: ./gradlew :geohash:dependencies
-
-      - save_cache:
-          paths:
-            - ~/.gradle
-          key: v1-dependencies-{{ checksum "geohash/build.gradle" }}
-
       # run tests!
-      - run: ./gradlew jsNodeTest
+      - run:
+          name: Javascript Node Unit Tests
+          command: ./gradlew jsNodeTest
 
       - store_test_results:
           path: geohash/build/test-results
@@ -108,43 +119,45 @@ jobs:
       # specify the version you desire here
       - image: circleci/openjdk:8-jdk
 
+    environment:
+      # Configure the JVM and Gradle to avoid OOM errors
+      _JAVA_OPTIONS: "-Xmx3g"
+      GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2"
+
     working_directory: ~/repo
 
     steps:
       - checkout
 
-      # Download and cache dependencies
-      - restore_cache:
-          keys:
-            - v1-dependencies-{{ checksum "geohash/build.gradle" }}
-            # fallback to using the latest cache if no exact match is found
-            - v1-dependencies-
-
-      - restore_cache:
-          name:
-          keys:
-            - v1-native-dependencies-{{ checksum "geohash/build.gradle" }}
-            # fallback to using the latest cache if no exact match is found
-            - v1-native-dependencies-
-
       - run:
-          name: Download dependencies
-          command: |
-            ./gradlew :geohash:dependencies
-            ./gradlew :geohash:compileKotlinLinux
-
-      - save_cache:
-          paths:
-            - ~/.gradle
-          key: v1-dependencies-{{ checksum "geohash/build.gradle" }}
-
-      - save_cache:
-          paths:
-            - ~/.konan/dependencies
-          key: v1-native-dependencies-{{ checksum "geohash/build.gradle" }}
+          name: Fix for linux builds
+          command: sudo apt-get update && sudo apt-get install libncurses5 -y
 
       # run tests!
-      - run: ./gradlew linuxTest
+      - run:
+          name: Linux Unit Tests
+          command: ./gradlew linuxTest
+
+      - store_test_results:
+          path: geohash/build/test-results
+
+  Windows-Native-Test:
+    executor:
+      name: win/default
+
+    environment:
+      # Configure the JVM and Gradle to avoid OOM errors
+      _JAVA_OPTIONS: "-Xmx3g"
+      GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2"
+
+    steps:
+      - checkout
+
+      # run tests!
+      - run:
+          name: Windows Unit Tests
+          command: ./gradlew windowsTest
+          shell: bash.exe
 
       - store_test_results:
           path: geohash/build/test-results
@@ -153,8 +166,11 @@ workflows:
   version: 2
   Tests:
     jobs:
+      - MacOs-Test
+      - Android-Test
       - JVM-Test
       - Javascript-Browser-Test
       - Javascript-Node-Test
       - Linux-Native-Test
+      - Windows-Native-Test
 
