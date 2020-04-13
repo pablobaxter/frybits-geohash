@@ -14,8 +14,8 @@ class GeohashQueryTest {
 
     @Test
     fun blah() {
-        val hash = Geohash("x8zp042p8j81")
-        val hash2 = Geohash("8j8jb42h210p")
+        val hash = Geohash("9mu9xvv11vb5")
+        val hash2 = Geohash("9mu9xyn0huuw")
 
         val boundingBox = BoundingBox(
             hash.coordinate.latitude,

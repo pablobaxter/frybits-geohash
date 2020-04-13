@@ -3,10 +3,10 @@
 buildscript {
 
     ext {
-        geohash_version = '0.1' // your library version
-        geohash_group = 'com.frybits.geohash' // whatever group name you'd like
+        geohash_version = '0.1'
+        geohash_group = 'com.frybits.geohash'
 
-        kotlin_version = '1.3.61'
+        kotlin_version = '1.3.71'
 
         junit_version = '4.12'
         androidx_test_runner_version = '1.2.0'
@@ -25,10 +25,9 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.5.3'
+        classpath 'com.android.tools.build:gradle:3.6.2'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
-        classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.5'
     }
 }
 
