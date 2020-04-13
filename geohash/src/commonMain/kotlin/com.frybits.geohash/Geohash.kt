@@ -1,7 +1,6 @@
 package com.frybits.geohash
 
 import com.frybits.geohash.internal.LatLonBits
-import com.frybits.geohash.internal.geohashRange
 import com.frybits.geohash.internal.toBoundingBox
 import com.frybits.geohash.internal.toBoundingBoxAndBits
 import com.frybits.geohash.internal.toGeohashString

@@ -13,7 +13,7 @@ import kotlin.js.JsName
  * @property southWestPoint Southwest point of this [BoundingBox]
  * @property northEastPoint Northeast point of this [BoundingBox]
  *
- * @throws IllegalArgumentException if [minLat] is greater than [maxLat], if any of the latitudes is
+ * @throws IllegalArgumentException if [southWestPoint] latitude is greater than [northEastPoint] latitude, if any of the latitudes is
  * outside of -90 to 90 degrees, or if any longitude is outside of -180 to 180 degrees.
  */
 
